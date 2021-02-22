@@ -49,7 +49,6 @@ spec:
           #set -e -o pipefail;
           echo "Cloning $REPOSITORY";
           git clone -b $BRANCH $REPOSITORY
-          git branch acsync $BRANCH
           ls -la
           pwd
       volumeMounts:
@@ -84,7 +83,9 @@ spec:
           cd toolchain-sample
           pwd
           ls -la 
-          git branch          
+          git branch 
+          git branch acsync $BRANCH        
+          git branch           
           if [ "$REGION" = "eu-gb" ]; then
             baseUrl="https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
           else 
@@ -97,7 +98,7 @@ spec:
           configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
           echo $configUrl
           echo "------"          
-          curl -X GET $configUrl -H 'Authorization: $APIKEY' >> ./toolchain-sample/feature.json
+          curl -X GET $configUrl -H 'Authorization: $APIKEY' >> feature.json
           echo "Retrieved the Flags. Written to the json" 
           
 #          if [ ! -f ./config/production.json ]; then
