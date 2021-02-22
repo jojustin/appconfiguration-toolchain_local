@@ -101,8 +101,12 @@ spec:
           curl -X GET $configUrl -H 'Authorization: $APIKEY' >> feature.json
           echo "Retrieved the Flags. Written to the json" 
           git status
-          git diff-index --quiet HEAD --          
-          git diff-index --quiet HEAD -- || echo "untracked"; 
+          changes=$(git status --porcelain=v1 2>/dev/null | wc -l)
+          if [ "$changes" = "0" ]; then
+            echo "no changes"
+          else 
+             echo "changes"
+          fi
           
 #          if [ ! -f ./config/production.json ]; then
 #             touch ./config/production.json
