@@ -32,6 +32,7 @@ spec:
   steps:
     - name: git-clone
       image: icr.io/continuous-delivery/pipeline/tekton/alpine-git:latest
+      workingDir: /artifacts
       env:
         - name: REPOSITORY
           value: $(params.repository)
@@ -57,6 +58,7 @@ spec:
           name: steps-volume
     - name: json-update
       image: icr.io/continuous-delivery/pipeline/tekton/alpine-git:latest
+      workingDir: /artifacts
       env:
         - name: APIKEY
           value: $(params.apikey)
