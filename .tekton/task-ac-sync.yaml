@@ -48,7 +48,8 @@ spec:
           #set -e -o pipefail;
           echo "Cloning $REPOSITORY";
           git clone -b $BRANCH $REPOSITORY
-          ls -la 
+          ls -la
+          pwd
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume
@@ -79,7 +80,7 @@ spec:
           pwd
           # to do - change this 
           cd ./toolchain-sample
-          if [ $REGION = "eu-gb" ]; then
+          if [ $REGION == "eu-gb" ]; then
             baseUrl = "https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances"
           else 
             # baseUrl = "https://us-south.apprapp.cloud.ibm.com/apprapp/feature/v1/instances"
@@ -89,7 +90,7 @@ spec:
           echo $baseUrl
           echo "------"
           configUrl = baseUrl + $GUID + "/collections/" + $COLLECTIONID + "/config" -H 'Authorization: $APIKEY'
-          jsonVal=$(curl -X GET $featuresUrl | jq -r)
+          jsonVal=$(curl -X GET $configUrl)
           echo $jsonVal
           
 #          if [ ! -f ./config/production.json ]; then
