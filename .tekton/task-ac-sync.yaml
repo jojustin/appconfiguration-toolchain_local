@@ -105,9 +105,14 @@ spec:
           if [ "$changes" = "0" ]; then
             echo "no changes"
           else 
-             userName=$(git config user.name)
+             echo "changes ---- "
+             git config user.name
+             echo "------11"
+             userName=$(git config user.name)             
              echo "user name is $userName"
+             echo "------12"             
              git add .
+             echo "------13"             
              git commit -m "sync with app configuration"
              git push origin
              git config user.name "$userName"
