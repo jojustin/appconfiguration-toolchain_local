@@ -46,6 +46,8 @@ spec:
           value: $(params.guid)
         - name: region
           value: $(params.region)
+        - name: collection_id
+          value: $(params.collection_id)
         - name: task-pvc
           value: $(params.pipeline-pvc)
 #      resources:      

@@ -61,7 +61,7 @@ spec:
           value: $(params.apikey)
         - name: GUID
           value: $(params.guid)
-        - name: REPOSITORY
+        - name: COLLECTIONID
           value: $(params.collection_id)
         - name: BRANCH
           value: $(params.branch)

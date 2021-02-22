@@ -60,6 +60,8 @@ spec:
             value: $(params.guid)
           - name: region
             value: $(params.region)    
+          - name: collection_id
+            value: $(params.collection_id)
         workspaces:
           - name: pipeline-ws
             persistentVolumeClaim:
