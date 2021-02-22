@@ -82,7 +82,7 @@ spec:
           pwd
           # to do - change this 
           cd ./toolchain-sample
-          if [ $REGION == "eu-gb" ]; then
+          if [ "$REGION" = "eu-gb" ]; then
             baseUrl = "https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances"
           else 
             # baseUrl = "https://us-south.apprapp.cloud.ibm.com/apprapp/feature/v1/instances"
