@@ -100,8 +100,10 @@ spec:
           echo "------"          
           curl -X GET $configUrl -H 'Authorization: $APIKEY' >> feature.json
           echo "Retrieved the Flags. Written to the json" 
+          echo "------+++++++++++++++++++++++++++++"             
           git status
           changes=$(git status --porcelain=v1 2>/dev/null | wc -l)
+          echo "------+++++++++++++++++++++++++++++=========="                       
           if [ "$changes" = "0" ]; then
             echo "no changes"
           else 
