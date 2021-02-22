@@ -108,6 +108,8 @@ spec:
             echo "no changes"
           else 
              echo "changes ---- "
+             git config -l
+             echo "changes ---- 111"
              git config user.name
              echo "------11"
              userName=$(git config user.name)             
