@@ -10,25 +10,25 @@ spec:
       description: the git repo
     - name: branch
       description: the branch for the git repo
-    - name: apikey
-      description: the ibmcloud api key
-    - name: registryNamespace
-      description: the ibmcloud registry namespace
-    - name: cluster
-      description: The IBM Cloud Kubernetes cluster name
-    - name: registryRegion
-      description: the ibmcloud registry region
-      default: us-south
-    - name: clusterRegion
-      description: The IBM Cloud Kubernetes cluster region
-      default: us-south
-    - name: clusterNamespace
-      description: The Kubernetes cluster namespace
-      default: prod                  
-    - name: guid
-      description: Id of the App Configuration instance
-    - name: collection_id
-      description: name of the App Configuration collection
+#    - name: apikey
+#      description: the ibmcloud api key
+#    - name: registryNamespace
+#      description: the ibmcloud registry namespace
+#    - name: cluster
+#      description: The IBM Cloud Kubernetes cluster name
+#    - name: registryRegion
+#      description: the ibmcloud registry region
+#      default: us-south
+#    - name: clusterRegion
+#      description: The IBM Cloud Kubernetes cluster region
+#      default: us-south
+#    - name: clusterNamespace
+#      description: The Kubernetes cluster namespace
+#      default: prod                  
+#    - name: guid
+#      description: Id of the App Configuration instance
+#    - name: collection_id
+#      description: name of the App Configuration collection
   tasks:
     - name: clone-repository
       taskRef: 
