@@ -106,6 +106,10 @@ spec:
             echo "no changes"
           else 
              echo "changes"
+             git add .
+             git commit -m "sync with app configuration"
+             git push origin
+             git request-pull origin/main acsync
           fi
           
 #          if [ ! -f ./config/production.json ]; then
