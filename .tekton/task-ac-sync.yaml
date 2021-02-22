@@ -112,31 +112,13 @@ spec:
              echo "changes ---- 111"
              git config user.name
              echo "------11"
-             userName=$(git config user.name)             
-             echo "user name is $userName"
-             echo "------12"             
              git add .
              echo "------13"             
              git commit -m "sync with app configuration"
              git push origin
-             git config user.name "$userName"
+             git config user.name jojustin
              git request-pull origin/main acsync
           fi
-          
-#          if [ ! -f ./config/production.json ]; then
-#             touch ./config/production.json
-#          fi
-#          echo "features url is $featuresUrl"
-#          jsonVal=$(curl $featuresUrl | jq -r)
-#          jq -r '.[] | { (.name): .enabled }' <<<"$jsonVal" | jq -s 'add' > ./config/production.json
-#          echo "instance name is $instanceName"
-#          echo "Got Flags. Written to the config - " 
-#          cat ./config/production.json
-#          jq --arg instanceId "${instanceId}" '.instanceId=$instanceId' ./config/production.json >  "tmp" && mv "tmp" ./config/production.json
-#          jq --arg appName "${appName}" '.appName=$appName' ./config/production.json >  "tmp" && mv "tmp" ./config/production.json          
-#          jq --arg name "${instanceName}" '.instanceName=$name' ./config/production.json >  "tmp" && mv "tmp" ./config/production.json
-#          jq --arg apikey "${analyticsapikey}" '.analyticsapikey=$apikey' ./config/production.json >  "tmp" && mv "tmp" ./config/production.json
-#          jq --arg featuresUrl "${featuresUrl}" '.featuresUrl=$featuresUrl' ./config/production.json >  "tmp" && mv "tmp" ./config/production.json
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume
