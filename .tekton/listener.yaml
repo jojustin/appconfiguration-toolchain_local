@@ -47,6 +47,10 @@ spec:
       spec:
         pipelineRef:
           name: pipeline
+        resources:
+          - name: app-image
+            resourceRef:
+              name: image-to-build          
         params:
           - name: pipeline-pvc
             value: pipelinerun-$(uid)-pvc
