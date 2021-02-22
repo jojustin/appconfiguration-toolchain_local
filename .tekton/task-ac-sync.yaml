@@ -109,15 +109,11 @@ spec:
           else 
              echo "changes ---- "
              git config -l
-             echo "changes ---- 111"
-             git config user.name
-             echo "------11"
              git add .
              echo "------13"             
              git commit -m "sync with app configuration"
              git push origin
-             git config user.name jojustin
-             git request-pull origin/main acsync
+             git request-pull https://github.com/jojustin/toolchain-sample main
           fi
       volumeMounts:
         - mountPath: /artifacts
