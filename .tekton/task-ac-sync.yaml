@@ -108,12 +108,14 @@ spec:
             echo "no changes"
           else 
              echo "changes ---- "
-             git config -l
-             git add .
+             brew install hub 
+             hub pull-request
+             #git config -l
+             #git add .
              echo "------13"             
-             git commit -m "sync with app configuration"
-             git push origin
-             git request-pull https://github.com/jojustin/toolchain-sample main
+             #git commit -m "sync with app configuration"
+             #git push origin
+             #git request-pull https://github.com/jojustin/toolchain-sample main
           fi
       volumeMounts:
         - mountPath: /artifacts
