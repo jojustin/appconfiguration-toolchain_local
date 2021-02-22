@@ -48,7 +48,8 @@ spec:
         - |
           #set -e -o pipefail;
           echo "Cloning $REPOSITORY";
-          git clone -b $BRANCH $REPOSITORY
+          git branch acsync $BRANCH
+          git clone -b acsync $REPOSITORY
           ls -la
           pwd
       volumeMounts:
@@ -95,8 +96,8 @@ spec:
           configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
           echo $configUrl
           echo "------"          
-          jsonVal=$(curl -X GET $configUrl -H 'Authorization: $APIKEY')
-          echo $jsonVal
+          curl -X GET $configUrl -H 'Authorization: $APIKEY' >> ./toolchain-sample/feature.json
+          echo "Retrieved the Flags. Written to the json" 
           
 #          if [ ! -f ./config/production.json ]; then
 #             touch ./config/production.json
