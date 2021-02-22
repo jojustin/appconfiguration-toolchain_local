@@ -34,10 +34,10 @@ spec:
             secretKeyRef:
               name: $(inputs.params.continuous-delivery-context-secret)
               key: GIT_TOKEN                                 
-      command: ["/bin/bash", "-c"]
+      command: ["/bin/sh", "-c"]
       args:
         - |
-          set -e -o pipefail;
+          #set -e -o pipefail;
           echo "Cloning $REPOSITORY";
           git clone -b $BRANCH $REPOSITORY
           ls -la 
