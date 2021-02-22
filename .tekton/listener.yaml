@@ -8,25 +8,14 @@ spec:
       description: the git repo
     - name: branch
       description: the branch for the git repo
-#    - name: apikey
-#      description: the ibmcloud api key
-#    - name: registryNamespace
-#      description: the ibmcloud registry namespace
-#    - name: cluster
-#      description: The IBM Cloud Kubernetes cluster name
-#    - name: registryRegion
-#      description: the ibmcloud registry region
-#      default: us-south
-#    - name: clusterRegion
-#      description: The IBM Cloud Kubernetes cluster region
-#      default: us-south
-#    - name: clusterNamespace
-#      description: The Kubernetes cluster namespace
-#      default: prod                  
-#    - name: guid
-#      description: Id of the App Configuration instance
-#    - name: collection_id
-#      description: name of the App Configuration collection
+    - name: apikey
+      description: the ibmcloud api key
+    - name: region
+      description: Region of the App Configuration instance
+    - name: guid
+      description: Id of the App Configuration instance
+    - name: collection_id
+      description: name of the App Configuration collection
   resourcetemplates:
     - apiVersion: v1
       kind: Secret
@@ -37,6 +26,9 @@ spec:
         API_KEY: $(params.apikey)
         parameters: $(params.parameters)
         GIT_TOKEN: $(params.gitToken)
+        REGION: ${params.region}
+        GUID: ${params.guid}        
+        COLLECTIONID: ${params.collection_id}        
     - apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
@@ -62,6 +54,12 @@ spec:
             value: $(params.repository)
           - name: branch
             value: $(params.branch)
+          - name: apikey
+            value: $(params.apikey)
+          - name: guid
+            value: $(params.guid)
+          - name: region
+            value: $(params.region)    
         workspaces:
           - name: pipeline-ws
             persistentVolumeClaim:

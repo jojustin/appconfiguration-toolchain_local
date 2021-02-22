@@ -1,0 +1,113 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: ac-sync-task
+spec:
+  params:
+    - name: task-pvc
+      description: the output pvc - this is the name of the PVC that is mounted for the execution of the task
+    - name: repository
+      description: the git repo
+    - name: branch
+      description: the branch for the git repo
+      default: master
+    - name: apikey
+      description: the ibmcloud api key
+    - name: guid
+      description: Id of the App Configuration instance
+    - name: region
+      description: Region of the App Configuration instance
+    - name: collection_id
+      description: name of the App Configuration collection      
+    - name: continuous-delivery-context-secret
+      description: name of the configmap containing the continuous delivery pipeline context secrets
+      default: cd-secret
+  stepTemplate:
+    env:
+      - name: GIT_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: $(params.continuous-delivery-context-secret)
+            key: GIT_TOKEN            
+  steps:
+    - name: git-clone
+      image: icr.io/continuous-delivery/pipeline/tekton/alpine-git:latest
+      env:
+        - name: REPOSITORY
+          value: $(params.repository)
+        - name: BRANCH
+          value: $(params.branch)
+        - name: GIT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: $(inputs.params.continuous-delivery-context-secret)
+              key: GIT_TOKEN                                 
+      command: ["/bin/sh", "-c"]
+      args:
+        - |
+          #set -e -o pipefail;
+          echo "Cloning $REPOSITORY";
+          git clone -b $BRANCH $REPOSITORY
+          ls -la 
+      volumeMounts:
+        - mountPath: /artifacts
+          name: task-volume
+        - mountPath: /steps
+          name: steps-volume
+    - name: json-update
+      image: ibmcom/pipeline-base-image
+      env:
+        - name: APIKEY
+          value: $(params.apikey)
+        - name: GUID
+          value: $(params.guid)
+        - name: REPOSITORY
+          value: $(params.collection_id)
+        - name: BRANCH
+          value: $(params.branch)
+        - name: REGION
+          value: $(params.region)
+        - name: GIT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: $(inputs.params.continuous-delivery-context-secret)
+              key: GIT_TOKEN                                 
+      command: ["/bin/sh", "-c"]
+      args:
+        - |
+          set -e -o pipefail
+          ls -la
+          
+#          if [ ! -f ./config/production.json ]; then
+#             touch ./config/production.json
+#          fi
+#          echo "features url is $featuresUrl"
+#          jsonVal=$(curl $featuresUrl | jq -r)
+#          jq -r '.[] | { (.name): .enabled }' <<<"$jsonVal" | jq -s 'add' > ./config/production.json
+#          echo "instance name is $instanceName"
+#          echo "Got Flags. Written to the config - " 
+#          cat ./config/production.json
+#          jq --arg instanceId "${instanceId}" '.instanceId=$instanceId' ./config/production.json >  "tmp" && mv "tmp" ./config/production.json
+#          jq --arg appName "${appName}" '.appName=$appName' ./config/production.json >  "tmp" && mv "tmp" ./config/production.json          
+#          jq --arg name "${instanceName}" '.instanceName=$name' ./config/production.json >  "tmp" && mv "tmp" ./config/production.json
+#          jq --arg apikey "${analyticsapikey}" '.analyticsapikey=$apikey' ./config/production.json >  "tmp" && mv "tmp" ./config/production.json
+#          jq --arg featuresUrl "${featuresUrl}" '.featuresUrl=$featuresUrl' ./config/production.json >  "tmp" && mv "tmp" ./config/production.json
+      volumeMounts:
+        - mountPath: /artifacts
+          name: task-volume
+        - mountPath: /steps
+          name: steps-volume
+        - mountPath: /certs/client
+          name: dind-certs          
+  volumes:
+    - name: task-volume
+      persistentVolumeClaim:
+        claimName: $(params.task-pvc)
+    - name: steps-volume
+      emptyDir: {}
+    - name: cd-config-volume
+      configMap:
+        name: toolchain
+        items:
+        - key: toolchain.json
+          path: toolchain.json
