@@ -3,17 +3,17 @@ kind: Task
 metadata:
   name: clone-repo-task
 spec:
-   params:
-     - name: task-pvc
-       description: the output pvc - this is the name of the PVC that is mounted for the execution of the task
-     - name: repository
-       description: the git repo
-     - name: branch
-       description: the branch for the git repo
-       default: master
-     - name: continuous-delivery-context-secret
-       description: name of the configmap containing the continuous delivery pipeline context secrets
-       default: cd-secret
+  params:
+    - name: task-pvc
+      description: the output pvc - this is the name of the PVC that is mounted for the execution of the task
+    - name: repository
+      description: the git repo
+    - name: branch
+      description: the branch for the git repo
+      default: master
+    - name: continuous-delivery-context-secret
+      description: name of the configmap containing the continuous delivery pipeline context secrets
+      default: cd-secret
   stepTemplate:
     env:
       - name: GIT_TOKEN
