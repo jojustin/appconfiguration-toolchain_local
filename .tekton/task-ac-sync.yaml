@@ -55,7 +55,7 @@ spec:
         - mountPath: /steps
           name: steps-volume
     - name: json-update
-      image: ibmcom/pipeline-base-image
+      image: icr.io/continuous-delivery/pipeline/tekton/alpine-git:latest
       env:
         - name: APIKEY
           value: $(params.apikey)
