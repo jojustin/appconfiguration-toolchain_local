@@ -40,7 +40,7 @@ spec:
           value: $(params.branch)
         - name: task-pvc
           value: $(params.pipeline-pvc)
-      resources:          
-        outputs:
-          - name: builtImage
-            resource: app-image
+#      resources:      
+#        outputs:
+#          - name: builtImage
+#            resource: app-image
