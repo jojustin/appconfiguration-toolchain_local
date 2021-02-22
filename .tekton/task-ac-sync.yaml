@@ -92,8 +92,10 @@ spec:
           
           echo $baseUrl
           echo "------"
-          configUrl=baseUrl + $GUID + "/collections/" + $COLLECTIONID + "/config" -H 'Authorization: $APIKEY'
-          jsonVal=$(curl -X GET $configUrl)
+          configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
+          echo $configUrl
+          echo "------"          
+          jsonVal=$(curl -X GET $configUrl -H 'Authorization: $APIKEY')
           echo $jsonVal
           
 #          if [ ! -f ./config/production.json ]; then
