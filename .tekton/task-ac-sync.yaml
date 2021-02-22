@@ -49,7 +49,8 @@ spec:
           #set -e -o pipefail;
           echo "Cloning $REPOSITORY";
           git clone -b $BRANCH $REPOSITORY
-          git branch acsync $BRANCH
+          
+          #git branch acsync $BRANCH
           ls -la
           pwd
       volumeMounts:
@@ -82,9 +83,10 @@ spec:
           set -e -o pipefail;
           ls -la
           pwd
-          git branch
+
           # to do - change this 
           cd ./toolchain-sample
+          git branch          
           if [ "$REGION" = "eu-gb" ]; then
             baseUrl="https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
           else 
