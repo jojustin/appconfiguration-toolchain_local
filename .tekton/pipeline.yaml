@@ -31,11 +31,6 @@ spec:
       description: Id of the App Configuration instance
     - name: collection_id
       description: name of the App Configuration collection
-  workspaces:
-    - name: pipeline-ws
-  resources:
-    - name: app-image
-      type: image      
   tasks:
     - name: ac-sync
       taskRef: 
