@@ -31,19 +31,6 @@ spec:
     - apiVersion: v1
       kind: Secret
       metadata:
-        name: artifactory-pull-secret
-      data:
-        .dockerconfigjson: $(params.dockerconfigjson)
-      type: kubernetes.io/dockerconfigjson
-    - apiVersion: v1
-      kind: ServiceAccount
-      imagePullSecrets:
-        - name: artifactory-pull-secret
-      metadata:
-        name: artifactory-pull-account-sa
-    - apiVersion: v1
-      kind: Secret
-      metadata:
         name: cd-secret
       type: Opaque
       stringData:
