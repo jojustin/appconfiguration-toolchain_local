@@ -85,7 +85,7 @@ spec:
           ls -la 
           git branch 
           git branch acsync $BRANCH        
-          git branch           
+          git checkout acsync         
           if [ "$REGION" = "eu-gb" ]; then
             baseUrl="https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
           else 
@@ -100,7 +100,7 @@ spec:
           echo "------"          
           curl -X GET $configUrl -H 'Authorization: $APIKEY' >> feature.json
           echo "Retrieved the Flags. Written to the json" 
-          
+          git status
 #          if [ ! -f ./config/production.json ]; then
 #             touch ./config/production.json
 #          fi
