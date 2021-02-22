@@ -101,7 +101,9 @@ spec:
           curl -X GET $configUrl -H 'Authorization: $APIKEY' >> feature.json
           echo "Retrieved the Flags. Written to the json" 
           git status
+          git diff-index --quiet HEAD --          
           git diff-index --quiet HEAD -- || echo "untracked"; 
+          
 #          if [ ! -f ./config/production.json ]; then
 #             touch ./config/production.json
 #          fi
