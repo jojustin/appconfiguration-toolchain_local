@@ -97,8 +97,6 @@ spec:
           name: task-volume
         - mountPath: /steps
           name: steps-volume
-        - mountPath: /certs/client
-          name: dind-certs          
   volumes:
     - name: task-volume
       persistentVolumeClaim:
