@@ -84,9 +84,9 @@ spec:
           # to do - change this 
           cd ./toolchain-sample
           if [ "$REGION" = "eu-gb" ]; then
-            baseUrl="https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances"
+            baseUrl="https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
           else 
-            # baseUrl="https://us-south.apprapp.cloud.ibm.com/apprapp/feature/v1/instances"
+            # baseUrl="https://us-south.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
             baseUrl="https://apprapp-dev-37b89de8caeb649450a9af91731f3589-0000.us-south.containers.appdomain.cloud/apprapp/feature/v1/instances"
           fi
           
