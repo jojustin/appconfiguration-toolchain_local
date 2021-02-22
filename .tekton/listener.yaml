@@ -74,7 +74,11 @@ spec:
           - name: repository
             value: $(params.repository)
           - name: branch
-            value: $(params.branch)            
+            value: $(params.branch)
+        workspaces:
+          - name: pipeline-ws
+            persistentVolumeClaim:
+              claimName: pipelinerun-$(uid)-pvc                      
 ---
 apiVersion: tekton.dev/v1alpha1
 kind: TriggerBinding
