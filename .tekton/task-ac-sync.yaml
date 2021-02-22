@@ -43,7 +43,7 @@ spec:
             secretKeyRef:
               name: $(inputs.params.continuous-delivery-context-secret)
               key: GIT_TOKEN                                 
-      command: ["/bin/sh", "-c"]
+      command: ["/bin/bash", "-c"]
       args:
         - |
           #set -e -o pipefail;
@@ -75,7 +75,7 @@ spec:
             secretKeyRef:
               name: $(inputs.params.continuous-delivery-context-secret)
               key: GIT_TOKEN                                 
-      command: ["/bin/sh", "-c"]
+      command: ["/bin/bash", "-c"]
       args:
         - |
           ls -la
