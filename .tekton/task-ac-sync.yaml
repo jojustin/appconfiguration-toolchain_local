@@ -72,6 +72,8 @@ spec:
           value: $(params.collection_id)
         - name: BRANCH
           value: $(params.branch)
+        - name: REPOSITORY
+          value: $(params.repository)          
         - name: REGION
           value: $(params.region)
         - name: GIT_TOKEN
@@ -84,6 +86,7 @@ spec:
         - |
           set -x -o pipefail;
           # to do - change this 
+          echo ${REPOSITORY##*/}
           cd toolchain-sample
           
           git branch 
@@ -134,6 +137,8 @@ spec:
           value: $(params.imageUrl)        
         - name: RESOURCEGROUP
           value: $(params.resourceGroup)
+        - name: REPOSITORY
+          value: $(params.repository)          
         - name: BUILD_NUMBER
           valueFrom:
             fieldRef:
@@ -184,6 +189,8 @@ spec:
           value: $(params.clusterName)
         - name: resourceGroup
           value: $(params.resourceGroup)
+        - name: REPOSITORY
+          value: $(params.repository)          
         - name: BUILD_NUMBER
           valueFrom:
             fieldRef:
