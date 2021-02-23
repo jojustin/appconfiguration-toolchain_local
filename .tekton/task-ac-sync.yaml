@@ -106,6 +106,7 @@ spec:
              #git config -l
              git config --global user.name jojustin
              git config --global user.email jojustin@in.ibm.com
+             git config --global hub.protocol https
              git config -l
              git add .
              echo "after add "             
