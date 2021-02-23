@@ -215,45 +215,21 @@ spec:
           ibmcloud config --check-version false
           ibmcloud login -a https://cloud.ibm.com -r $REGION --apikey $API_KEY
           ibmcloud target -g $resourceGroup
-          # Log container registry to the appropriate region
-          #ibmcloud cr region-set $REGISTRY_REGION
           ibmcloud cr info
           
           ibmcloud ks cluster ls
-          echo "----------"
-          ibmcloud ks cluster config --cluster $clusterName
-          eval $(ibmcloud ks cluster config --cluster $clusterName);
-          IP_ADDR=$(ibmcloud cs workers $clusterName | grep normal | awk '{ print $2 }' )
+          ibmcloud ks cluster config --cluster $clusterName --export
+          eval $(ibmcloud ks cluster config --cluster $clusterName --export);
+          #IP_ADDR=$(ibmcloud cs workers $clusterName | grep normal | awk '{ print $2 }' )
           
           DEPLOYMENT_FILE="kube/deployment.yaml"
           echo "deployment file $DEPLOYMENT_FILE"
           sed -i 's=$IMAGE='"$BUILT_IMAGE"'=g' $DEPLOYMENT_FILE
           
-          echo "cat $DEPLOYMENT_FILE"
           cat $DEPLOYMENT_FILE
-          echo "-----------------"
           echo "kubectl apply -f $DEPLOYMENT_FILE"
           kubectl apply -f $DEPLOYMENT_FILE
-          echo ""
           kubectl apply -f kube/service.yaml
-          echo ""
-
-          # Make sure the cluster is running and get the ip_address
-          #ip_addr=$(ibmcloud cs workers $clusterName | grep normal | awk '{ print $2 }')
-          #echo "--------- $ip_addr"
-          #if [ -z $ip_addr ]; then
-          #  echo "$clusterName not created or workers not ready"
-          #  exit 1
-          #fi
-
-          # Show the IP address and the PORT of the running app
-          #port=$(kubectl get services | grep "$SERVICE_NAME" | sed 's/.*:\([0-9]*\).*/\1/g')
-          #echo "RUNNING APPLICATION:"
-          #echo "URL=http://$ip_addr"
-          #echo "PORT=$port"
-          #echo ""
-          #echo "$SERVICE_NAME running at: http://$ip_addr:$port"
-          
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume
