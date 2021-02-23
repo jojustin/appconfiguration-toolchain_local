@@ -220,7 +220,7 @@ spec:
           ibmcloud cr info
           
           $(ibmcloud ks cluster config --cluster $clusterName --export);
-          IP_ADDR=$( ibmcloud cs workers $clusterName | grep normal | awk '{ print $2 }' )
+          IP_ADDR=$(ibmcloud cs workers $clusterName | grep normal | awk '{ print $2 }' )
           
           DEPLOYMENT_FILE="kube/deployment.yaml"
           echo "deployment file $DEPLOYMENT_FILE"
@@ -236,10 +236,10 @@ spec:
           kubectl apply -f kube/service.yaml
           echo ""
           echo "DEPLOYED SERVICE:"
-          kubectl describe services $SERVICE_NAME -n appservice
+          kubectl describe services $SERVICE_NAME
           echo ""
           echo "DEPLOYED PODS:"
-          kubectl describe pods -n appservice --selector app=$SERVICE_NAME 
+          kubectl describe pods --selector app=$SERVICE_NAME 
           echo ""
 
           # Make sure the cluster is running and get the ip_address
@@ -251,7 +251,7 @@ spec:
           fi
 
           # Show the IP address and the PORT of the running app
-          port=$(kubectl get services -n appservice | grep "$SERVICE_NAME" | sed 's/.*:\([0-9]*\).*/\1/g')
+          port=$(kubectl get services | grep "$SERVICE_NAME" | sed 's/.*:\([0-9]*\).*/\1/g')
           echo "RUNNING APPLICATION:"
           echo "URL=http://$ip_addr"
           echo "PORT=$port"
