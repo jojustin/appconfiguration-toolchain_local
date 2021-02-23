@@ -22,7 +22,9 @@ spec:
     - name: imageUrl
       description: imageUrl
     - name: collection_id
-      description: name of the App Configuration collection      
+      description: name of the App Configuration collection
+    - name: clusterName
+      description: The IBM Cloud Kubernetes cluster name      
     - name: continuous-delivery-context-secret
       description: name of the configmap containing the continuous delivery pipeline context secrets
       default: cd-secret
@@ -144,7 +146,7 @@ spec:
         - name: GIT_TOKEN
           valueFrom:
             secretKeyRef:
-              name: $(inputs.params.continuous-delivery-context-secret)
+              name: $(params.continuous-delivery-context-secret)
               key: GIT_TOKEN                                 
       command: ["/bin/bash", "-c"]
       args:
@@ -169,7 +171,86 @@ spec:
         - mountPath: /artifacts
           name: task-volume
         - mountPath: /steps
-          name: steps-volume          
+          name: steps-volume
+    - name: deploy
+      image: ibmcom/pipeline-base-image
+      env:
+        - name: imageUrl
+          value: $(params.imageUrl)      
+        - name: clusterName
+          value: $(params.clusterName)
+        - name: resourceGroup
+          value: $(params.resourceGroup)
+        - name: BUILD_NUMBER
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']   
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: $(params.continuous-delivery-context-secret)
+              key: API_KEY  
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          set -e -o pipefail
+          echo "cluster name from param is $clusterName"
+          cd devx-appfoundation-samples/WebSamples/devx-appfoundation-ghzrentalapp
+          ls -la
+          BUILT_IMAGE="$imageUrl:$BUILD_NUMBER"
+          #REGISTRY_REGION="us-south"
+          ibmcloud config --check-version false
+          ibmcloud login -a https://cloud.ibm.com -r $REGISTRY_REGION --apikey $API_KEY
+          ibmcloud target -g $resourceGroup
+          # Log container registry to the appropriate region
+          #ibmcloud cr region-set $REGISTRY_REGION
+          ibmcloud cr info
+          
+          $(ibmcloud ks cluster config --cluster $clusterName --export);
+          IP_ADDR=$( ibmcloud cs workers $clusterName | grep normal | awk '{ print $2 }' )
+          
+          DEPLOYMENT_FILE="config/kube/deployment.yaml"
+          echo "deployment file $DEPLOYMENT_FILE"
+          sed -i 's=$IMAGE='"$BUILT_IMAGE"'=g' $DEPLOYMENT_FILE
+          
+          
+          echo "cat $DEPLOYMENT_FILE"
+          cat $DEPLOYMENT_FILE
+          echo "-----------------"
+          echo "kubectl apply -f $DEPLOYMENT_FILE"
+          kubectl apply -f $DEPLOYMENT_FILE
+          echo ""
+          SERVICE_NAME="appservice-cdintegration"
+          kubectl apply -f config/kube/service.yaml
+          echo ""
+          echo "DEPLOYED SERVICE:"
+          kubectl describe services $SERVICE_NAME -n appservice
+          echo ""
+          echo "DEPLOYED PODS:"
+          kubectl describe pods -n appservice --selector app=$SERVICE_NAME 
+          echo ""
+
+          # Make sure the cluster is running and get the ip_address
+          ip_addr=$(ibmcloud cs workers $clusterName | grep normal | awk '{ print $2 }')
+          echo "--------- $ip_addr"
+          if [ -z $ip_addr ]; then
+            echo "$clusterName not created or workers not ready"
+            exit 1
+          fi
+
+          # Show the IP address and the PORT of the running app
+          port=$(kubectl get services -n appservice | grep "$SERVICE_NAME" | sed 's/.*:\([0-9]*\).*/\1/g')
+          echo "RUNNING APPLICATION:"
+          echo "URL=http://$ip_addr"
+          echo "PORT=$port"
+          echo ""
+          echo "$SERVICE_NAME running at: http://$ip_addr:$port"
+          
+      volumeMounts:
+        - mountPath: /artifacts
+          name: task-volume
+        - mountPath: /steps
+          name: steps-volume
   volumes:
     - name: task-volume
       persistentVolumeClaim:

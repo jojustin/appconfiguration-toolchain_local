@@ -18,6 +18,8 @@ spec:
       description: url of the built image
     - name: region
       description: Region of the App Configuration instance
+    - name: clusterName
+      description: The IBM Cloud Kubernetes cluster name
 #    - name: region
 #      description: Region of the App Configuration instance
 
@@ -57,6 +59,8 @@ spec:
           value: $(params.guid)
         - name: region
           value: $(params.region)
+        - name: clusterName
+          value: $(params.clusterName)
         - name: collection_id
           value: $(params.collection_id)
         - name: task-pvc

@@ -19,7 +19,9 @@ spec:
     - name: resourceGroup
       description: Region of the App Configuration instance
     - name: imageUrl
-      description: url of the built image      
+      description: url of the built image
+    - name: clusterName
+      description: The IBM Cloud Kubernetes cluster name           
   resourcetemplates:
     - apiVersion: v1
       kind: Secret
@@ -35,6 +37,7 @@ spec:
         COLLECTIONID: ${params.collection_id}
         RESOURCEGROUP: ${params.resourceGroup}
         IMAGEURL: ${params.imageUrl}
+        CLUSTERNAME: ${params.clusterName}
     - apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
@@ -69,7 +72,9 @@ spec:
           - name: imageUrl
             value: $(params.imageUrl)            
           - name: region
-            value: $(params.region)    
+            value: $(params.region)
+          - name: clusterName
+            value: $(params.clusterName)               
           - name: collection_id
             value: $(params.collection_id)
         workspaces:
