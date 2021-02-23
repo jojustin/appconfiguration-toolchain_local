@@ -78,7 +78,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -e -o pipefail;
+          set -x -o pipefail;
           # to do - change this 
           cd toolchain-sample
           pwd
