@@ -93,14 +93,9 @@ spec:
             baseUrl="https://apprapp-dev-37b89de8caeb649450a9af91731f3589-0000.us-south.containers.appdomain.cloud/apprapp/feature/v1/instances/"
           fi
           
-          echo $baseUrl
-          echo "------"
           configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
-          echo $configUrl
-          echo "------"          
           curl -X GET $configUrl -H 'Authorization: $APIKEY' >> feature.json
           echo "Retrieved the Flags. Written to the json" 
-          echo "------+++++++++++++++++++++++++++++"             
           git status
           changes=$(git status --porcelain=v1 2>/dev/null | wc -l)
           echo "------+++++++++++++++++++++++++++++=========="                       
@@ -108,13 +103,11 @@ spec:
             echo "no changes"
           else 
              echo "changes ---- "
-             brew install hub 
-             hub pull-request
-             #git config -l
-             #git add .
+a             #git config -l
+             git add .
              echo "------13"             
-             #git commit -m "sync with app configuration"
-             #git push origin
+             git commit -m "sync with app configuration"
+             git push origin
              #git request-pull https://github.com/jojustin/toolchain-sample main
           fi
       volumeMounts:
