@@ -32,7 +32,9 @@ spec:
         GIT_TOKEN: $(params.gitToken)
         REGION: ${params.region}
         GUID: ${params.guid}        
-        COLLECTIONID: ${params.collection_id}        
+        COLLECTIONID: ${params.collection_id}
+        RESOURCEGROUP: ${params.resourceGroup}
+        IMAGEURL: ${params.imageUrl}
     - apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:

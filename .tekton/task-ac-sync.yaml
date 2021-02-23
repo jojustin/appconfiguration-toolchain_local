@@ -17,6 +17,10 @@ spec:
       description: Id of the App Configuration instance
     - name: region
       description: Region of the App Configuration instance
+    - name: resourceGroup
+      description: Resource group
+    - name: imageUrl
+      description: imageUrl
     - name: collection_id
       description: name of the App Configuration collection      
     - name: continuous-delivery-context-secret
@@ -126,9 +130,9 @@ spec:
           value: $(params.apikey)
         - name: REGION
           value: $(params.region)
-        - name: imageUrl
+        - name: IMAGEURL
           value: $(params.imageUrl)        
-        - name: resourceGroup
+        - name: RESOURCEGROUP
           value: $(params.resourceGroup)
         - name: BUILD_NUMBER
           valueFrom:
@@ -143,7 +147,7 @@ spec:
       args:
         - |
           set -x -o pipefail;
-          BUILT_IMAGE="$imageUrl:$BUILD_NUMBER"
+          BUILT_IMAGE="$IMAGEURL:$BUILD_NUMBER"
           echo "built image $BUILT_IMAGE"
           
           echo "Beginning of config json display"
@@ -152,7 +156,7 @@ spec:
           
           ibmcloud config --check-version false
           ibmcloud login -a https://cloud.ibm.com -r us-south --apikey $API_KEY    
-          ibmcloud target -g $resourceGroup      
+          ibmcloud target -g $RESOURCEGROUP      
           ibmcloud cr build -t $BUILT_IMAGE .
           #BUILT_IMAGE="$REGISTRY_URL/$REGISTRY_NAMESPACE/$IMAGE_NAME:$BUILD_NUMBER"
           echo "image is $BUILT_IMAGE"
