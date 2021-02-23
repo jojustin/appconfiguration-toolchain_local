@@ -48,11 +48,7 @@ spec:
         - |
           #set -e -o pipefail;
           echo "Cloning $REPOSITORY";
-          git clone git@github.com:jojustin/toolchain-sample.git
-          #git clone -b $BRANCH $REPOSITORY
-          #git clone git@github.com:jojustin/toolchain-sample.git
-          ls -la
-          pwd
+          git clone -b $BRANCH $REPOSITORY
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume
@@ -122,6 +118,50 @@ spec:
           name: task-volume
         - mountPath: /steps
           name: steps-volume
+    - name: docker-build
+      image: ibmcom/pipeline-base-image
+      workingDir: /artifacts
+      env:
+        - name: APIKEY
+          value: $(params.apikey)
+        - name: REGION
+          value: $(params.region)
+        - name: imageUrl
+          value: $(params.imageUrl)        
+        - name: resourceGroup
+          value: $(params.resourceGroup)
+        - name: BUILD_NUMBER
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']             
+        - name: GIT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: $(inputs.params.continuous-delivery-context-secret)
+              key: GIT_TOKEN                                 
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          set -x -o pipefail;
+          BUILT_IMAGE="$imageUrl:$BUILD_NUMBER"
+          echo "built image $BUILT_IMAGE"
+          
+          echo "Beginning of config json display"
+          cat ./feature.json
+          echo "End of config json display"
+          
+          ibmcloud config --check-version false
+          ibmcloud login -a https://cloud.ibm.com -r us-south --apikey $API_KEY    
+          ibmcloud target -g $resourceGroup      
+          ibmcloud cr build -t $BUILT_IMAGE .
+          #BUILT_IMAGE="$REGISTRY_URL/$REGISTRY_NAMESPACE/$IMAGE_NAME:$BUILD_NUMBER"
+          echo "image is $BUILT_IMAGE"
+          echo "Docker Image has been pushed to us.icr.io"
+      volumeMounts:
+        - mountPath: /artifacts
+          name: task-volume
+        - mountPath: /steps
+          name: steps-volume          
   volumes:
     - name: task-volume
       persistentVolumeClaim:

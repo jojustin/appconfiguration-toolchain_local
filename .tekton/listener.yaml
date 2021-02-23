@@ -16,6 +16,10 @@ spec:
       description: Id of the App Configuration instance
     - name: collection_id
       description: name of the App Configuration collection
+    - name: resourceGroup
+      description: Region of the App Configuration instance
+    - name: imageUrl
+      description: url of the built image      
   resourcetemplates:
     - apiVersion: v1
       kind: Secret
@@ -58,6 +62,10 @@ spec:
             value: $(params.apikey)
           - name: guid
             value: $(params.guid)
+          - name: resourceGroup
+            value: $(params.resourceGroup)
+          - name: imageUrl
+            value: $(params.imageUrl)            
           - name: region
             value: $(params.region)    
           - name: collection_id
