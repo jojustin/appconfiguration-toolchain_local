@@ -87,9 +87,9 @@ spec:
           set -x -o pipefail;
           # to do - change this 
           echo ${REPOSITORY}
-          echo ${REPOSITORY} | rev | cut -d '/' -f 1 | rev
-          echo ${REPOSITORY##*/}
-          cd toolchain-sample
+          #echo ${REPOSITORY} | rev | cut -d '/' -f 1 | rev
+          folderName=$(echo ${REPOSITORY##*/})
+          cd $folderName
           
           git branch 
           git branch acsync $BRANCH        
@@ -161,7 +161,8 @@ spec:
           set -e -o pipefail;
           BUILT_IMAGE="$IMAGEURL:$BUILD_NUMBER"
           echo "built image $BUILT_IMAGE"
-          cd toolchain-sample
+          folderName=$(echo ${REPOSITORY##*/})
+          cd $folderName
           ls -la
           echo "Beginning of config json display"
           cat ./feature.json
@@ -207,7 +208,8 @@ spec:
         - |
           set -x -o pipefail
           echo "cluster name from param is $clusterName"
-          cd toolchain-sample
+          folderName=$(echo ${REPOSITORY##*/})
+          cd $folderName
           ls -la
           BUILT_IMAGE="$imageUrl:$BUILD_NUMBER"
           ibmcloud config --check-version false
@@ -220,7 +222,7 @@ spec:
           $(ibmcloud ks cluster config --cluster $clusterName --export);
           IP_ADDR=$( ibmcloud cs workers $clusterName | grep normal | awk '{ print $2 }' )
           
-          DEPLOYMENT_FILE="config/kube/deployment.yaml"
+          DEPLOYMENT_FILE="kube/deployment.yaml"
           echo "deployment file $DEPLOYMENT_FILE"
           sed -i 's=$IMAGE='"$BUILT_IMAGE"'=g' $DEPLOYMENT_FILE
           
@@ -231,7 +233,7 @@ spec:
           kubectl apply -f $DEPLOYMENT_FILE
           echo ""
           SERVICE_NAME="appservice-cdintegration"
-          kubectl apply -f config/kube/service.yaml
+          kubectl apply -f kube/service.yaml
           echo ""
           echo "DEPLOYED SERVICE:"
           kubectl describe services $SERVICE_NAME -n appservice
