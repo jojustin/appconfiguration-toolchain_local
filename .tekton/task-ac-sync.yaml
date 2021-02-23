@@ -105,17 +105,17 @@ spec:
           else 
              echo "changes ---- "
              #git config -l
-             git config --global user.name jojustin
-             git config --global user.email jojustin@in.ibm.com
+             #git config --global user.name jojustin
+             #git config --global user.email jojustin@in.ibm.com
              #git config --global hub.protocol https
              git config -l
-             git add .
-             echo "after add "             
-             git commit -m "sync with app configuration"
-             echo "after commit " 
-             git push --set-upstream origin acsync
-             echo "after push origin " 
-             git request-pull https://${GIT_TOKEN}@github.com/jojustin/toolchain-sample.git main
+             #git add .
+             #echo "after add "             
+             #git commit -m "sync with app configuration"
+             #echo "after commit " 
+             #git push --set-upstream origin acsync
+             #echo "after push origin " 
+             #git request-pull https://${GIT_TOKEN}@github.com/jojustin/toolchain-sample.git main
           fi
       volumeMounts:
         - mountPath: /artifacts
