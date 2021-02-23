@@ -151,7 +151,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -x -o pipefail;
+          set -e -o pipefail;
           BUILT_IMAGE="$IMAGEURL:$BUILD_NUMBER"
           echo "built image $BUILT_IMAGE"
           cd toolchain-sample
@@ -161,7 +161,7 @@ spec:
           echo "End of config json display"
           
           ibmcloud config --check-version false
-          ibmcloud login -a https://cloud.ibm.com -r us-south --apikey $API_KEY    
+          ibmcloud login -a https://cloud.ibm.com -r $REGION --apikey $API_KEY    
           ibmcloud target -g $RESOURCEGROUP      
           ibmcloud cr build -t $BUILT_IMAGE .
           #BUILT_IMAGE="$REGISTRY_URL/$REGISTRY_NAMESPACE/$IMAGE_NAME:$BUILD_NUMBER"
@@ -177,7 +177,9 @@ spec:
       workingDir: /artifacts
       env:
         - name: imageUrl
-          value: $(params.imageUrl)      
+          value: $(params.imageUrl)
+        - name: REGION
+          value: $(params.region)             
         - name: clusterName
           value: $(params.clusterName)
         - name: resourceGroup
@@ -194,16 +196,13 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -e -o pipefail
-          ls -la
-          pwd
+          set -x -o pipefail
           echo "cluster name from param is $clusterName"
           cd toolchain-sample
           ls -la
           BUILT_IMAGE="$imageUrl:$BUILD_NUMBER"
-          #REGISTRY_REGION="us-south"
           ibmcloud config --check-version false
-          ibmcloud login -a https://cloud.ibm.com -r $REGISTRY_REGION --apikey $API_KEY
+          ibmcloud login -a https://cloud.ibm.com -r $REGION --apikey $API_KEY
           ibmcloud target -g $resourceGroup
           # Log container registry to the appropriate region
           #ibmcloud cr region-set $REGISTRY_REGION
