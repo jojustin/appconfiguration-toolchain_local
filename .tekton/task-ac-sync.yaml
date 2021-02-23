@@ -48,7 +48,8 @@ spec:
         - |
           #set -e -o pipefail;
           echo "Cloning $REPOSITORY";
-          git clone -b $BRANCH $REPOSITORY
+          #git clone -b $BRANCH $REPOSITORY
+          git clone git@github.com:jojustin/toolchain-sample.git
           ls -la
           pwd
       volumeMounts:
@@ -81,8 +82,7 @@ spec:
           set -x -o pipefail;
           # to do - change this 
           cd toolchain-sample
-          pwd
-          ls -la 
+          
           git branch 
           git branch acsync $BRANCH        
           git checkout acsync         
@@ -106,7 +106,7 @@ spec:
              #git config -l
              git config --global user.name jojustin
              git config --global user.email jojustin@in.ibm.com
-             git config --global hub.protocol https
+             #git config --global hub.protocol https
              git config -l
              git add .
              echo "after add "             
@@ -114,7 +114,7 @@ spec:
              echo "after commit " 
              git push --set-upstream origin acsync
              echo "after push origin " 
-             git request-pull https://github.com/jojustin/toolchain-sample main
+             git request-pull https://${GIT_TOKEN}@github.com/jojustin/toolchain-sample.git main
           fi
       volumeMounts:
         - mountPath: /artifacts
