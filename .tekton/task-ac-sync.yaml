@@ -195,7 +195,7 @@ spec:
         - |
           set -e -o pipefail
           echo "cluster name from param is $clusterName"
-          cd devx-appfoundation-samples/WebSamples/devx-appfoundation-ghzrentalapp
+          cd toolchain-sample
           ls -la
           BUILT_IMAGE="$imageUrl:$BUILD_NUMBER"
           #REGISTRY_REGION="us-south"
