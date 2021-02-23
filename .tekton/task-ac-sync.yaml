@@ -232,31 +232,24 @@ spec:
           echo "kubectl apply -f $DEPLOYMENT_FILE"
           kubectl apply -f $DEPLOYMENT_FILE
           echo ""
-          SERVICE_NAME="appservice-cdintegration"
           kubectl apply -f kube/service.yaml
-          echo ""
-          echo "DEPLOYED SERVICE:"
-          kubectl describe services $SERVICE_NAME
-          echo ""
-          echo "DEPLOYED PODS:"
-          kubectl describe pods --selector app=$SERVICE_NAME 
           echo ""
 
           # Make sure the cluster is running and get the ip_address
-          ip_addr=$(ibmcloud cs workers $clusterName | grep normal | awk '{ print $2 }')
-          echo "--------- $ip_addr"
-          if [ -z $ip_addr ]; then
-            echo "$clusterName not created or workers not ready"
-            exit 1
-          fi
+          #ip_addr=$(ibmcloud cs workers $clusterName | grep normal | awk '{ print $2 }')
+          #echo "--------- $ip_addr"
+          #if [ -z $ip_addr ]; then
+          #  echo "$clusterName not created or workers not ready"
+          #  exit 1
+          #fi
 
           # Show the IP address and the PORT of the running app
-          port=$(kubectl get services | grep "$SERVICE_NAME" | sed 's/.*:\([0-9]*\).*/\1/g')
-          echo "RUNNING APPLICATION:"
-          echo "URL=http://$ip_addr"
-          echo "PORT=$port"
-          echo ""
-          echo "$SERVICE_NAME running at: http://$ip_addr:$port"
+          #port=$(kubectl get services | grep "$SERVICE_NAME" | sed 's/.*:\([0-9]*\).*/\1/g')
+          #echo "RUNNING APPLICATION:"
+          #echo "URL=http://$ip_addr"
+          #echo "PORT=$port"
+          #echo ""
+          #echo "$SERVICE_NAME running at: http://$ip_addr:$port"
           
       volumeMounts:
         - mountPath: /artifacts
