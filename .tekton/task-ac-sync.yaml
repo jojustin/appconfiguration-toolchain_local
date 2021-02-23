@@ -219,7 +219,8 @@ spec:
           #ibmcloud cr region-set $REGISTRY_REGION
           ibmcloud cr info
           
-          
+          ibmcloud ks cluster ls
+          echo "----------"
           ibmcloud ks cluster config --cluster $clusterName
           eval $(ibmcloud ks cluster config --cluster $clusterName);
           IP_ADDR=$(ibmcloud cs workers $clusterName | grep normal | awk '{ print $2 }' )
