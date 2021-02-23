@@ -218,8 +218,7 @@ spec:
           ibmcloud cr info
           
           ibmcloud ks cluster ls
-          ibmcloud ks cluster config --cluster $clusterName --export
-          eval $(ibmcloud ks cluster config --cluster $clusterName --export);
+          ibmcloud ks cluster config --cluster $clusterName
           #IP_ADDR=$(ibmcloud cs workers $clusterName | grep normal | awk '{ print $2 }' )
           
           DEPLOYMENT_FILE="kube/deployment.yaml"
