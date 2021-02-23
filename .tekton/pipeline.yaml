@@ -16,8 +16,8 @@ spec:
       description: Region of the App Configuration instance
     - name: imageUrl
       description: url of the built image
-#    - name: region
-#      description: Region of the App Configuration instance
+    - name: region
+      description: Region of the App Configuration instance
 #    - name: region
 #      description: Region of the App Configuration instance
 
