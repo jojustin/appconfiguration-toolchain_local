@@ -103,7 +103,7 @@ spec:
             echo "no changes"
           else 
              echo "changes ---- "
-a             #git config -l
+             #git config -l
              git add .
              echo "------13"             
              git commit -m "sync with app configuration"
