@@ -105,11 +105,14 @@ spec:
              echo "changes ---- "
              #git config -l
              git config --global user.name jojustin
+             git config --global user.email jojustin@in.ibm.com
              git config -l
              git add .
-             echo "------13"             
+             echo "after add "             
              git commit -m "sync with app configuration"
-             git push origin
+             echo "after commit " 
+             git push origin main
+             echo "after push origin " 
              git request-pull https://github.com/jojustin/toolchain-sample main
           fi
       volumeMounts:
