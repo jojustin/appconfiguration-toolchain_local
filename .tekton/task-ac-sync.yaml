@@ -111,7 +111,7 @@ spec:
              echo "after add "             
              git commit -m "sync with app configuration"
              echo "after commit " 
-             git push origin main
+             git push origin
              echo "after push origin " 
              git request-pull https://github.com/jojustin/toolchain-sample main
           fi
