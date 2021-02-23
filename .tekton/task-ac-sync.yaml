@@ -48,8 +48,9 @@ spec:
         - |
           #set -e -o pipefail;
           echo "Cloning $REPOSITORY";
+          gh repo clone jojustin/toolchain-sample
           #git clone -b $BRANCH $REPOSITORY
-          git clone git@github.com:jojustin/toolchain-sample.git
+          #git clone git@github.com:jojustin/toolchain-sample.git
           ls -la
           pwd
       volumeMounts:
