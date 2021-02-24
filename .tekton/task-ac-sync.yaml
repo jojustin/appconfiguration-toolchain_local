@@ -114,11 +114,17 @@ spec:
             # baseUrl="https://us-south.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
             baseUrl="https://apprapp-dev-37b89de8caeb649450a9af91731f3589-0000.us-south.containers.appdomain.cloud/apprapp/feature/v1/instances/"
           fi
-          
-          configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
-          curl -X GET $configUrl -H 'Authorization: $APIKEY' >> feature.json
           ls -la
           pwd
+          
+          echo "--------------- before udpate"
+          cat feature.json
+          echo "---------------"          
+          configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
+          curl -X GET $configUrl -H 'Authorization: $APIKEY' >> feature.json
+          echo "--------------- after  udpate"
+          cat feature.json     
+          echo "---------------"               
           echo "Retrieved the Flags. Written to the json" 
           git status
           changes=$(git status --porcelain=v1 2>/dev/null | wc -l)
@@ -134,7 +140,7 @@ spec:
              git push --set-upstream origin acsync
              echo "after push origin " 
              curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"App Configuration sync - from pipeline","head":"main","base":"acsync"}'
-             
+             exit 0
           fi
       volumeMounts:
         - mountPath: /artifacts
