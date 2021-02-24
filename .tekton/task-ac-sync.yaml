@@ -75,7 +75,7 @@ spec:
           name: task-volume
         - mountPath: /steps
           name: steps-volume
-    - name: json-update
+    - name: appconfig-sync
       image: ibmcom/pipeline-base-image
       workingDir: /artifacts
       env:
@@ -117,6 +117,8 @@ spec:
           
           configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
           curl -X GET $configUrl -H 'Authorization: $APIKEY' >> feature.json
+          ls -la
+          pwd
           echo "Retrieved the Flags. Written to the json" 
           git status
           changes=$(git status --porcelain=v1 2>/dev/null | wc -l)
@@ -125,10 +127,6 @@ spec:
             echo "no changes"
           else 
              echo "changes ---- "
-             #git config --global user.name jojustin
-             #git config --global user.email jojustin@in.ibm.com
-             #git config --global hub.protocol https
-             git config -l
              git add .
              echo "after add "             
              git commit -m "sync with app configuration"
@@ -136,7 +134,7 @@ spec:
              git push --set-upstream origin acsync
              echo "after push origin " 
              curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"App Configuration sync - from pipeline","head":"main","base":"acsync"}'
-
+             
           fi
       volumeMounts:
         - mountPath: /artifacts
