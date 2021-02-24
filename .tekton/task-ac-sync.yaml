@@ -123,10 +123,11 @@ spec:
           fi
           cat feature.json
           configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
-          until $(curl -X GET $configUrl -H 'Authorization: Dn5Dly9lqzHKHK7ff8Io1e5FwSUBPFMUQ38dQk40QlaU' > feature.json); do
+          until $(curl -X GET $configUrl -H 'Authorization: $API_KEY' > feature.json); do
             printf '.'
             sleep 5
           done
+          cat feature.json
           exit 1
 
       volumeMounts:
