@@ -130,7 +130,7 @@ spec:
             echo "no changes"
           else 
              #userName=$(curl -H "Authorization: token $GIT+_TOKEN https://api.github.com/user | jq -r '.login')
-             curl -H "Authorization: token $GIT+_TOKEN https://api.github.com/user
+             #curl -H "Authorization: token $GIT+_TOKEN https://api.github.com/user
              exit 1
           fi
       volumeMounts:
