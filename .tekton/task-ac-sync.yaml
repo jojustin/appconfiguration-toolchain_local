@@ -135,12 +135,12 @@ spec:
              echo "changes ---- "
              git add .
              echo "after add "             
-             git commit -m "sync with app configuration"
+             git commit -c user.name=jojustin -m "sync with app configuration"
              echo "after commit " 
              git push --set-upstream origin acsync
              echo "after push origin " 
              curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"App Configuration sync - from pipeline","head":"main","base":"acsync"}'
-             exit 0
+             exit 1
           fi
       volumeMounts:
         - mountPath: /artifacts
