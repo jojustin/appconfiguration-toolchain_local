@@ -136,6 +136,7 @@ spec:
           then
               echo "Files are identical"
           else
+               set -x
                localBranchName=acsync_$BUILD_NUMBER
                git branch $localBranchName $BRANCH     
                git checkout $localBranchName         
