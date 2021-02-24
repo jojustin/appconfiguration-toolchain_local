@@ -108,7 +108,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -e -o pipefail;
+          set -x -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
           cd $folderName
           
@@ -120,12 +120,12 @@ spec:
           fi
           cat feature.json
           configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
-          curl -X GET $configUrl -H 'Authorization: $APIKEY' > feature.json
+          curl -s -X GET $configUrl -H 'Authorization: $APIKEY' > feature.json
 
           echo "--------------"
           differenceB=$(diff <(curl -X GET $configUrl -H 'Authorization: $APIKEY') <(cat feature.json))
           echo "-----"$differenceB"
-          
+          exit 1
           
           echo "--------------"
           cat feature.json             
