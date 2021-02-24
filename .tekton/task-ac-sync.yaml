@@ -129,7 +129,7 @@ spec:
             printf 'waiting...'
             sleep 5
           done
-          diff -wB  $FEATUREFILEPATH featuretemp.json  >/dev/null;REPLY=$?
+          diff -wB  "$FEATUREFILEPATH" featuretemp.json  >/dev/null;REPLY=$?
           if [ ${REPLY} -eq 0 ]
           then
               echo "No feature flag updates.  Continue to deploy"
@@ -139,7 +139,7 @@ spec:
                git checkout $localBranchName         
   
               echo "Files are different"
-              cp featuretemp.json $FEATUREFILEPATH
+              cp featuretemp.json "$FEATUREFILEPATH"
               rm -rf featuretemp.json
               userName=$(curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/user | jq -r '.login')
              email=$(curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/user/emails | jq -r '.[0].email')             
