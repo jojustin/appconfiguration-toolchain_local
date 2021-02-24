@@ -53,11 +53,12 @@ spec:
           #git clone -b $BRANCH $REPOSITORY
           
           #to do - change this
-          replaceStr="$REPOSITORY@github"
+          replaceStr="$GIT_TOKEN@github"
           echo "$REPOSITORY"
           echo "-------------"
-          echo "$REPOSITORY" | sed "s/github/$replaceStr/"
-          test=$(echo "$REPOSITORY" | sed "s/github/$replaceStr/")
+          #echo "$REPOSITORY" | sed "s/github/$replaceStr/"
+          test=${REPOSITORY/github/replaceStr}
+          #test=$(echo "$REPOSITORY" | sed "s/github/$replaceStr/")
           echo "replace string $test"
           GIT_URL="https://$GIT_TOKEN@github.com/jojustin/toolchain-sample.git"
 
