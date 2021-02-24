@@ -59,7 +59,7 @@ spec:
           # Add the proper creds to the git repository
           #GIT_URL=$(echo "$REPOSITORY" | sed -e "s/:\/\//:\/\/$GIT_AUTH_USER:$GIT_TOKEN@/g")
           #to do - change this 
-          GIT_URL=https://$GIT_TOKEN@github.com/toolchain-sample.git
+          GIT_URL=https://$GIT_TOKEN@github.com/jojustin/toolchain-sample.git
           echo "Cloning $GIT_URL"
           repo_exists=$(git ls-remote $GIT_URL 2>&1 | cut -d':' -f2 | head -1 | awk '{print $1,$2,$3}')
           echo "$repo_exists"
@@ -70,6 +70,7 @@ spec:
             echo "Repo exists"
           fi
           if [ -z "$BRANCH" ]; then
+              echo "git clone"
               git clone -q -b $BRANCH $GIT_URL
           fi
 
