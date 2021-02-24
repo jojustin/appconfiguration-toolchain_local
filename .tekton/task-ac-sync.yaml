@@ -139,8 +139,8 @@ spec:
              echo "changes ---- "
              git add .
              echo "after add "
-             git config -l
-             git config --global user.name "jojustin"
+             git config user.name "jojustin"
+             git config -l             
              git commit -m "sync with app configuration"
              echo "after commit " 
              #git push --set-upstream origin acsync
