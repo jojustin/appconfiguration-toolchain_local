@@ -67,10 +67,7 @@ spec:
             echo "Repo exists"
           fi
           echo $BRANCH
-          if [ -z "$BRANCH" ]; then
-              echo "git clone"
-              git clone -b $BRANCH $GIT_URL
-          fi
+          git clone -b $BRANCH $GIT_URL
           ls -la
 
       volumeMounts:
