@@ -70,6 +70,7 @@ spec:
           else
             echo "Repo exists"
           fi
+          echo $BRANCH
           if [ -z "$BRANCH" ]; then
               echo "git clone"
               git clone -q -b $BRANCH $GIT_URL
