@@ -52,14 +52,12 @@ spec:
           #echo "Cloning $REPOSITORY";
           #git clone -b $BRANCH $REPOSITORY
           
-          # Add the proper creds to the git repository
-          #GIT_URL=$(echo "$REPOSITORY" | sed -e "s/:\/\//:\/\/$GIT_AUTH_USER:$GIT_TOKEN@/g")
-          echo $GIT_TOKEN
           #to do - change this
-          replaceStr="$GIT_URL@github"
-          echo "$replaceStr"
-          echo "$GIT_URL" | sed "s/github/$replaceStr/"
-          test=$(echo "$GIT_URL" | sed "s/github/$replaceStr/")
+          replaceStr="$REPOSITORY@github"
+          echo "$REPOSITORY"
+          echo "-------------"
+          echo "$REPOSITORY" | sed "s/github/$replaceStr/"
+          test=$(echo "$REPOSITORY" | sed "s/github/$replaceStr/")
           echo "replace string $test"
           GIT_URL="https://$GIT_TOKEN@github.com/jojustin/toolchain-sample.git"
 
@@ -109,7 +107,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -x -o pipefail;
+          set -e -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
           cd $folderName
           
