@@ -120,14 +120,21 @@ spec:
           fi
           cat feature.json
           configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
-          curl -s -X GET $configUrl -H 'Authorization: $APIKEY' > feature.json
+          until $(curl -s -X GET $configUrl -H 'Authorization: $APIKEY' > feature.json); do
+            printf '.'
+            sleep 5
+          done
+          
+          
+          
+          #curl -s -X GET $configUrl -H 'Authorization: $APIKEY' > feature.json
 
           echo "--------------"
           #differenceB=$(diff <(curl -X GET $configUrl -H 'Authorization: $APIKEY') <(cat feature.json))
           #echo "-----"$differenceB"
           
           
-          echo "--------------"
+          echo "--------------after"
           cat feature.json             
           exit 1
           echo "Retrieved the Flags. Written to the json" 
