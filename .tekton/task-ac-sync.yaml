@@ -55,7 +55,10 @@ spec:
           # Add the proper creds to the git repository
           #GIT_URL=$(echo "$REPOSITORY" | sed -e "s/:\/\//:\/\/$GIT_AUTH_USER:$GIT_TOKEN@/g")
           echo $GIT_TOKEN
-          #to do - change this 
+          #to do - change this
+          replaceStr=$GIT_TOKEN@github
+          test=$(echo "$GIT_URL" | sed "s/github/$replaceStr/")
+          echo "replace string $test"
           GIT_URL="https://$GIT_TOKEN@github.com/jojustin/toolchain-sample.git"
           echo "Cloning $GIT_URL"
           repo_exists=$(git ls-remote $GIT_URL 2>&1 | cut -d':' -f2 | head -1 | awk '{print $1,$2,$3}')
@@ -121,11 +124,8 @@ spec:
           curl -X GET $configUrl -H 'Authorization: $APIKEY' >> feature.json
           cat feature.json     
           echo "Retrieved the Flags. Written to the json" 
-          #git status
-          #git branch 
           git status --porcelain=v1 2>/dev/null | wc -l
           changes=$(git status --porcelain=v1 2>/dev/null | wc -l)
-          echo "------+++++++++++++++++++++++++++++=========="                       
           if [ "$changes" = "0" ]; then
             echo "no changes"
           else 
@@ -137,10 +137,7 @@ spec:
              git config -l             
              git add .
              git commit -m "sync with app configuration"
-             echo "after commit " 
-             #git config remote.origin.push HEAD
              git push --set-upstream origin $localBranchName
-             echo "after push origin " 
              #curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"App Configuration sync - from pipeline","head":"main","base":'"\"$localBranchName\""'}'
              echo "Changes are committed.  PR needs to be approved to proceed."
              exit 1
