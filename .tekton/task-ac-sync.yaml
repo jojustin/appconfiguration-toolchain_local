@@ -103,13 +103,10 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -e -o pipefail;
-          echo ${REPOSITORY}
-          #echo ${REPOSITORY} | rev | cut -d '/' -f 1 | rev
+          set -x -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
           cd $folderName
           
-          git branch 
           localBranchName=acsync_$BUILD_NUMBER
           git branch $localBranchName $BRANCH     
           git checkout $localBranchName         
@@ -119,22 +116,13 @@ spec:
             # baseUrl="https://us-south.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
             baseUrl="https://apprapp-dev-37b89de8caeb649450a9af91731f3589-0000.us-south.containers.appdomain.cloud/apprapp/feature/v1/instances/"
           fi
-          ls -la
-          pwd
           
-          echo "--------------- before udpate"
-          cat feature.json
-          echo "---------------"          
           configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
           curl -X GET $configUrl -H 'Authorization: $APIKEY' >> feature.json
-          echo "--------------- after  udpate"
           cat feature.json     
-          echo "---------------"               
           echo "Retrieved the Flags. Written to the json" 
-          git status
-          echo "----git sbranch "
-          git branch 
-          echo "----git status "          
+          #git status
+          #git branch 
           git status --porcelain=v1 2>/dev/null | wc -l
           changes=$(git status --porcelain=v1 2>/dev/null | wc -l)
           echo "------+++++++++++++++++++++++++++++=========="                       
