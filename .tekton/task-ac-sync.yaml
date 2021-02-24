@@ -131,20 +131,14 @@ spec:
           ls -la
           #jq --argfile a feature.json --argfile b featuretemp.json -n '($a | (.. | arrays) |= sort) as $a | ($b | (.. | arrays) |= sort) as $b | $a == $b'
           #ls -la
-          cat feature.json  
-          echo "--------" 
-          cat featuretemp.json
-          echo "--------"
-          diff feature.json featuretemp.json 
-          echo "--------"
-          git diff --no-index feature.json featuretemp.json          
-          if cmp -s feature.json featuretemp.json; then
-              printf 'The file is same'
+          diff -wB  feature.json featuretemp.json  >/dev/null;REPLY=$?
+          if [ ${REPLY} -eq 0 ]
+          then
+              echo "Files are identical"
           else
-              printf 'The file is not same'
+              echo "Files are different"
           fi
-          exit 1
-          
+          exit 1          
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume
