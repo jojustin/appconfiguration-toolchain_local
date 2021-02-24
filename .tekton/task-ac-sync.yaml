@@ -44,11 +44,6 @@ spec:
           value: $(params.repository)
         - name: BRANCH
           value: $(params.branch)
-        - name: GIT_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: $(inputs.params.continuous-delivery-context-secret)
-              key: GIT_TOKEN                                 
       command: ["/bin/sh", "-c"]
       args:
         - |
