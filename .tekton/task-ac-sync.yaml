@@ -111,7 +111,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -x -o pipefail;
+          set -e -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
           cd $folderName
           #> feature.json
@@ -128,6 +128,7 @@ spec:
             printf 'waiting...'
             sleep 5
           done
+          ls -la
           jq --argfile a feature.json --argfile b featuretemp.json -n '($a | (.. | arrays) |= sort) as $a | ($b | (.. | arrays) |= sort) as $b | $a == $b'
           #ls -la
           #cat feature.json          
