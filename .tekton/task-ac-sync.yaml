@@ -132,8 +132,8 @@ spec:
           #jq --argfile a feature.json --argfile b featuretemp.json -n '($a | (.. | arrays) |= sort) as $a | ($b | (.. | arrays) |= sort) as $b | $a == $b'
           #ls -la
           cat feature.json   
-          echo "------"       
           cat featuretemp.json
+          diff feature.json featuretemp.json 
           if cmp -s feature.json featuretemp.json; then
               printf 'The file is same'
           else
