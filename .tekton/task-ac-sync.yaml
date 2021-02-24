@@ -84,8 +84,6 @@ spec:
       image: ibmcom/pipeline-base-image
       workingDir: /artifacts
       env:
-        - name: APIKEY
-          value: $(params.apikey)
         - name: GUID
           value: $(params.guid)
         - name: COLLECTIONID
@@ -96,6 +94,11 @@ spec:
           value: $(params.repository)          
         - name: REGION
           value: $(params.region)
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: $(params.continuous-delivery-context-secret)
+              key: API_KEY          
         - name: BUILD_NUMBER
           valueFrom:
             fieldRef:
@@ -124,7 +127,7 @@ spec:
             printf '.'
             sleep 5
           done
-          exit
+          exit 1
 
       volumeMounts:
         - mountPath: /artifacts
