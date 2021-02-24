@@ -134,8 +134,8 @@ spec:
           if [ "$changes" = "0" ]; then
             echo "no changes"
           else 
-             userName=$(curl -H "Authorization: token $GIT+_TOKEN https://api.github.com/user | jq -r '.login')
-             email=$(curl -H "Authorization: token 1949ed2da679b1f8ed455d281ff2cbf964832c55" https://api.github.com/user/emails | jq -r '.[0].email')             
+             userName=$(curl -H "Authorization: token $GIT_TOKEN https://api.github.com/user | jq -r '.login')
+             email=$(curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/user/emails | jq -r '.[0].email')             
              git config user.name "$userName"
              git config user.email "$email"             
              
