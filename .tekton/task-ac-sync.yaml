@@ -54,7 +54,24 @@ spec:
         - |
           #set -e -o pipefail;
           echo "Cloning $REPOSITORY";
-          git clone -b $BRANCH $REPOSITORY
+          #git clone -b $BRANCH $REPOSITORY
+          # Add the proper creds to the git repository
+          #GIT_URL=$(echo "$REPOSITORY" | sed -e "s/:\/\//:\/\/$GIT_AUTH_USER:$GIT_TOKEN@/g")
+          #to do - change this 
+          GIT_URL=https://$GIT_TOKEN@github.com/toolchain-sample.git
+          echo "Cloning $REPOSITORY"
+          repo_exists=$(git ls-remote $GIT_URL 2>&1 | cut -d':' -f2 | head -1 | awk '{print $1,$2,$3}')
+          echo "$repo_exists"
+          if [ "$repo_exists" == "Repository not found." ]; then
+            echo "Repo does not exist"
+            exit 1
+          else
+            echo "Repo exists"
+          fi
+          if [ -z "$BRANCH" ]; then
+              git clone -q -b $BRANCH $GIT_URL
+          fi
+
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume
@@ -85,7 +102,6 @@ spec:
       args:
         - |
           set -x -o pipefail;
-          # to do - change this 
           echo ${REPOSITORY}
           #echo ${REPOSITORY} | rev | cut -d '/' -f 1 | rev
           folderName=$(echo ${REPOSITORY##*/})
@@ -208,9 +224,8 @@ spec:
         - |
           set -x -o pipefail
           echo "cluster name from param is $clusterName"
-          folderName=$(echo ${REPOSITORY##*/})
-          cd $folderName
-          ls -la
+          #folderName=$(echo ${REPOSITORY##*/})
+          #cd $folderName
           BUILT_IMAGE="$imageUrl:$BUILD_NUMBER"
           ibmcloud config --check-version false
           ibmcloud login -a https://cloud.ibm.com -r $REGION --apikey $API_KEY
@@ -219,7 +234,6 @@ spec:
           
           ibmcloud ks cluster ls
           ibmcloud ks cluster config --cluster $clusterName
-          #IP_ADDR=$(ibmcloud cs workers $clusterName | grep normal | awk '{ print $2 }' )
           
           DEPLOYMENT_FILE="kube/deployment.yaml"
           echo "deployment file $DEPLOYMENT_FILE"
