@@ -112,9 +112,6 @@ spec:
           folderName=$(echo ${REPOSITORY##*/})
           cd $folderName
           
-          localBranchName=acsync_$BUILD_NUMBER
-          git branch $localBranchName $BRANCH     
-          git checkout $localBranchName         
           if [ "$REGION" = "eu-gb" ]; then
             baseUrl="https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
           else 
@@ -124,13 +121,22 @@ spec:
           
           configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
           curl -X GET $configUrl -H 'Authorization: $APIKEY' > feature.json
-          cat feature.json     
+          cat feature.json
+          echo "--------------"
+          diff <(curl -X GET $configUrl -H 'Authorization: $APIKEY' > feature.json) <(cat feature.json)
+          
+          echo "--------------"
+             
           echo "Retrieved the Flags. Written to the json" 
           git status --porcelain=v1 2>/dev/null | wc -l
           changes=$(git status --porcelain=v1 2>/dev/null | wc -l)
           if [ "$changes" = "0" ]; then
             echo "no changes"
           else 
+             localBranchName=acsync_$BUILD_NUMBER
+             git branch $localBranchName $BRANCH     
+             git checkout $localBranchName         
+
              userName=$(curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/user | jq -r '.login')
              email=$(curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/user/emails | jq -r '.[0].email')             
              git config user.name "$userName"
