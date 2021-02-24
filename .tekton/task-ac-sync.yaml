@@ -136,7 +136,29 @@ spec:
           then
               echo "Files are identical"
           else
+               localBranchName=acsync_$BUILD_NUMBER
+               git branch $localBranchName $BRANCH     
+               git checkout $localBranchName         
+  
               echo "Files are different"
+              cp featuretemp.json feature.json
+              rm -rf featuretemp.json
+              userName=$(curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/user | jq -r '.login')
+             email=$(curl -H "Authorization: token 1949ed2da679b1f8ed455d281ff2cbf964832c55" https://api.github.com/user/emails | jq -r '.[0].email')             
+             git config user.name "$userName"
+             git config user.email "$email"             
+             
+             git config -l             
+             git add .
+             git commit -m "sync with app configuration"
+             echo "after commit " 
+             #git config remote.origin.push HEAD
+             git push --set-upstream origin $localBranchName
+             echo "after push origin " 
+             #curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"App Configuration sync - from pipeline","head":"main","base":'"\"$localBranchName\""'}'
+             echo "Changes are committed.  PR needs to be approved to proceed."
+             exit 1
+
           fi
           exit 1          
       volumeMounts:
