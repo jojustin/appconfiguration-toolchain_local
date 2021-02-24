@@ -52,6 +52,7 @@ spec:
       command: ["/bin/sh", "-c"]
       args:
         - |
+          set -x;
           #set -e -o pipefail;
           echo "Cloning $REPOSITORY";
           #git clone -b $BRANCH $REPOSITORY
@@ -59,7 +60,7 @@ spec:
           #GIT_URL=$(echo "$REPOSITORY" | sed -e "s/:\/\//:\/\/$GIT_AUTH_USER:$GIT_TOKEN@/g")
           #to do - change this 
           GIT_URL=https://$GIT_TOKEN@github.com/toolchain-sample.git
-          echo "Cloning $REPOSITORY"
+          echo "Cloning $GIT_URL"
           repo_exists=$(git ls-remote $GIT_URL 2>&1 | cut -d':' -f2 | head -1 | awk '{print $1,$2,$3}')
           echo "$repo_exists"
           if [ "$repo_exists" == "Repository not found." ]; then
