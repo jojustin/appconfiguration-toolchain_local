@@ -140,6 +140,8 @@ spec:
              git add .
              echo "after add "
              git config -l
+             git commit -m "sync with app configuration"
+             echo "after commit " 
           fi
       volumeMounts:
         - mountPath: /artifacts
