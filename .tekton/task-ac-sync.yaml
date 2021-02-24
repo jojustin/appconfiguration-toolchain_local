@@ -138,10 +138,8 @@ spec:
           else 
              echo "changes ---- "
              git add .
-             echo "after add "             
-             git commit -m "sync with app configuration"
-             echo "after commit " 
-             exit 1
+             echo "after add "
+             git config -l
           fi
       volumeMounts:
         - mountPath: /artifacts
