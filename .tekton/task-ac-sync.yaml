@@ -119,6 +119,13 @@ spec:
           
           echo "--------------- before udpate"
           cat feature.json
+          echo "---------------"          
+          configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
+          curl -X GET $configUrl -H 'Authorization: $APIKEY' >> feature.json
+          echo "--------------- after  udpate"
+          cat feature.json     
+          echo "---------------"               
+          echo "Retrieved the Flags. Written to the json" 
           
       volumeMounts:
         - mountPath: /artifacts
