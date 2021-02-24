@@ -134,7 +134,7 @@ spec:
           diff -wB  feature.json featuretemp.json  >/dev/null;REPLY=$?
           if [ ${REPLY} -eq 0 ]
           then
-              echo "Files are identical"
+              echo "No feature flag updates.  Continue to deploy"
           else
                localBranchName=acsync_$BUILD_NUMBER
                git branch $localBranchName $BRANCH     
@@ -144,7 +144,7 @@ spec:
               cp featuretemp.json feature.json
               rm -rf featuretemp.json
               userName=$(curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/user | jq -r '.login')
-             email=$(curl -H "Authorization: token 1949ed2da679b1f8ed455d281ff2cbf964832c55" https://api.github.com/user/emails | jq -r '.[0].email')             
+             email=$(curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/user/emails | jq -r '.[0].email')             
              git config user.name "$userName"
              git config user.email "$email"             
              
