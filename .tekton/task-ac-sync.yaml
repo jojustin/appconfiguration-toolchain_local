@@ -115,7 +115,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -e -o pipefail;
+          set -x -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
           cd $folderName
           if [ "$REGION" = "eu-gb" ]; then
