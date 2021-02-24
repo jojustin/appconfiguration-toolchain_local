@@ -134,11 +134,11 @@ spec:
           cat feature.json   
           echo "------"       
           cat featuretemp.json
-          #if cmp -s feature.json featuretemp.json; then
-           #   printf 'The file is same'
-          #else
-           #   printf 'The file is not same'
-          #fi
+          if cmp -s feature.json featuretemp.json; then
+              printf 'The file is same'
+          else
+              printf 'The file is not same'
+          fi
           exit 1
           
       volumeMounts:
