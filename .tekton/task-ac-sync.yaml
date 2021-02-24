@@ -134,7 +134,10 @@ spec:
           cat feature.json  
           echo "--------" 
           cat featuretemp.json
+          echo "--------"
           diff feature.json featuretemp.json 
+          echo "--------"
+          git diff --no-index feature.json featuretemp.json          
           if cmp -s feature.json featuretemp.json; then
               printf 'The file is same'
           else
