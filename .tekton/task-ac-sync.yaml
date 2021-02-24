@@ -129,12 +129,14 @@ spec:
           if [ "$changes" = "0" ]; then
             echo "no changes"
           else 
-             echo "changes ---- "
              git add .
-             echo "after add "
-             git config user.name "jojustin"
-             git config user.email "jojustin@in.ibm.com"             
-             #git config -l             
+             
+             userName=$(curl -H "Authorization: token $GIT+_TOKEN https://api.github.com/user | jq -r '.login')
+             email=$(curl -H "Authorization: token 1949ed2da679b1f8ed455d281ff2cbf964832c55" https://api.github.com/user/emails | jq -r '.[0].email')             
+             git config user.name "$userName"
+             git config user.email "$email"             
+             
+             git config -l             
              git commit -m "sync with app configuration"
              echo "after commit " 
              #git config remote.origin.push HEAD
