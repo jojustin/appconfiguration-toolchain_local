@@ -124,41 +124,8 @@ spec:
             printf '.'
             sleep 5
           done
-          
-          
-          
-          #curl -s -X GET $configUrl -H 'Authorization: $APIKEY' > feature.json
+          exit
 
-          echo "--------------"
-          #differenceB=$(diff <(curl -X GET $configUrl -H 'Authorization: $APIKEY') <(cat feature.json))
-          #echo "-----"$differenceB"
-          
-          
-          echo "--------------after"
-          cat feature.json             
-          exit 1
-          echo "Retrieved the Flags. Written to the json" 
-          git status --porcelain=v1 2>/dev/null | wc -l
-          changes=$(git status --porcelain=v1 2>/dev/null | wc -l)
-          if [ "$changes" = "0" ]; then
-            echo "no changes"
-          else 
-             localBranchName=acsync_$BUILD_NUMBER
-             git branch $localBranchName $BRANCH     
-             git checkout $localBranchName         
-
-             userName=$(curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/user | jq -r '.login')
-             email=$(curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/user/emails | jq -r '.[0].email')             
-             git config user.name "$userName"
-             git config user.email "$email"             
-             
-             git add .
-             git commit -m "sync with app configuration"
-             git push --set-upstream origin $localBranchName
-             #curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"App Configuration sync - from pipeline","head":"main","base":'"\"$localBranchName\""'}'
-             echo "Changes are committed.  PR needs to be approved to proceed."
-             exit 1
-          fi
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume
