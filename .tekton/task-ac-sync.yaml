@@ -52,7 +52,7 @@ spec:
       command: ["/bin/sh", "-c"]
       args:
         - |
-          set -x;
+          set -e;
           #set -e -o pipefail;
           echo "Cloning $REPOSITORY";
           #git clone -b $BRANCH $REPOSITORY
@@ -73,6 +73,7 @@ spec:
               echo "git clone"
               git clone -q -b $BRANCH $GIT_URL
           fi
+          ls -la
 
       volumeMounts:
         - mountPath: /artifacts
