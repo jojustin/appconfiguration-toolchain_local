@@ -152,7 +152,7 @@ spec:
              #git config remote.origin.push HEAD
              git push --set-upstream origin $localBranchName
              echo "after push origin " 
-             curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"App Configuration sync - from pipeline","head":"main","base":"$localBranchName"}'
+             curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"App Configuration sync - from pipeline","head":"main","base":$localBranchName}'
              exit 1
           fi
       volumeMounts:
