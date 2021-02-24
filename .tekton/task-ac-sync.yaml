@@ -111,7 +111,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -e -o pipefail;
+          set -x -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
           cd $folderName
           #> feature.json
@@ -123,7 +123,6 @@ spec:
           fi
           ls -la
           cat feature.json
-          cat featuretemp.json          
           configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
           until $(curl -X GET $configUrl -H 'Authorization: $API_KEY' > featuretemp.json); do
             printf 'waiting...'
