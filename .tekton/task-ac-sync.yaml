@@ -135,7 +135,8 @@ spec:
              echo "after commit " 
              git push --set-upstream origin acsync
              echo "after push origin " 
-             git request-pull https://${GIT_TOKEN}@github.com/jojustin/toolchain-sample.git acsync:main
+             curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"App Configuration sync - from pipeline","head":"main","base":"acsync"}'
+
           fi
       volumeMounts:
         - mountPath: /artifacts
