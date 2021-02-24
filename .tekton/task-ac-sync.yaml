@@ -111,7 +111,7 @@ spec:
           set -x -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
           cd $folderName
-          
+          > feature.json
           if [ "$REGION" = "eu-gb" ]; then
             baseUrl="https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
           else 
@@ -123,12 +123,13 @@ spec:
           curl -s -X GET $configUrl -H 'Authorization: $APIKEY' > feature.json
 
           echo "--------------"
-          differenceB=$(diff <(curl -X GET $configUrl -H 'Authorization: $APIKEY') <(cat feature.json))
-          echo "-----"$differenceB"
-          exit 1
+          #differenceB=$(diff <(curl -X GET $configUrl -H 'Authorization: $APIKEY') <(cat feature.json))
+          #echo "-----"$differenceB"
+          
           
           echo "--------------"
           cat feature.json             
+          exit 1
           echo "Retrieved the Flags. Written to the json" 
           git status --porcelain=v1 2>/dev/null | wc -l
           changes=$(git status --porcelain=v1 2>/dev/null | wc -l)
