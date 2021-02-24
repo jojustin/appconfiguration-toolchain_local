@@ -111,7 +111,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -e -o pipefail;
+          set -x -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
           cd $folderName
           #> feature.json
@@ -136,7 +136,6 @@ spec:
           then
               echo "Files are identical"
           else
-               set -x
                localBranchName=acsync_$BUILD_NUMBER
                git branch $localBranchName $BRANCH     
                git checkout $localBranchName         
