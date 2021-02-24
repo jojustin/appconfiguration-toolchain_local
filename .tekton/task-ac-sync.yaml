@@ -158,9 +158,7 @@ spec:
              #curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"App Configuration sync - from pipeline","head":"main","base":'"\"$localBranchName\""'}'
              echo "Changes are committed.  PR needs to be approved to proceed."
              exit 1
-
           fi
-          exit 1          
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume
