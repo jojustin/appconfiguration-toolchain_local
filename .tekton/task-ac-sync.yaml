@@ -135,7 +135,7 @@ spec:
              echo "after commit " 
              git push --set-upstream origin acsync
              echo "after push origin " 
-             #git request-pull https://${GIT_TOKEN}@github.com/jojustin/toolchain-sample.git main
+             git request-pull https://${GIT_TOKEN}@github.com/jojustin/toolchain-sample.git main
           fi
       volumeMounts:
         - mountPath: /artifacts
