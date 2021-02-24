@@ -20,6 +20,8 @@ spec:
       description: Region of the App Configuration instance
     - name: imageUrl
       description: url of the built image
+    - name: gitToken
+      description: git Token to access GITHUB api      
     - name: clusterName
       description: The IBM Cloud Kubernetes cluster name           
   resourcetemplates:
@@ -59,6 +61,8 @@ spec:
         params:
           - name: pipeline-pvc
             value: pipelinerun-$(uid)-pvc
+          - name: gitToken
+            value: $(params.gitToken)
           - name: repository
             value: $(params.repository)
           - name: branch
