@@ -129,10 +129,11 @@ spec:
             sleep 5
           done
           ls -la
-          jq --argfile a feature.json --argfile b featuretemp.json -n '($a | (.. | arrays) |= sort) as $a | ($b | (.. | arrays) |= sort) as $b | $a == $b'
+          #jq --argfile a feature.json --argfile b featuretemp.json -n '($a | (.. | arrays) |= sort) as $a | ($b | (.. | arrays) |= sort) as $b | $a == $b'
           #ls -la
-          #cat feature.json          
-          #cat featuretemp.json
+          cat feature.json   
+          echo "------"       
+          cat featuretemp.json
           #if cmp -s feature.json featuretemp.json; then
            #   printf 'The file is same'
           #else
