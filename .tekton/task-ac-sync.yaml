@@ -119,33 +119,7 @@ spec:
           
           echo "--------------- before udpate"
           cat feature.json
-          echo "---------------"          
-          configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
-          curl -X GET $configUrl -H 'Authorization: $APIKEY' >> feature.json
-          echo "--------------- after  udpate"
-          cat feature.json     
-          echo "---------------"               
-          echo "Retrieved the Flags. Written to the json" 
-          git status
-          echo "----git sbranch "
-          git branch 
-          echo "----git status "          
-          git status --porcelain=v1 2>/dev/null | wc -l
-          changes=$(git status --porcelain=v1 2>/dev/null | wc -l)
-          echo "------+++++++++++++++++++++++++++++=========="                       
-          if [ "$changes" = "0" ]; then
-            echo "no changes"
-          else 
-             echo "changes ---- "
-             git add .
-             echo "after add "             
-             git commit -m "sync with app configuration"
-             echo "after commit " 
-             git push --set-upstream origin acsync
-             echo "after push origin " 
-             curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"App Configuration sync - from pipeline","head":"main","base":"acsync"}'
-             exit 1
-          fi
+          
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume
