@@ -127,12 +127,14 @@ spec:
             printf 'waiting...'
             sleep 5
           done
+          cat feature.json          
           cat featuretemp.json
           if cmp -s feature.json featuretemp.json; then
               printf 'The file is same'
           else
               printf 'The file is not same'
           fi
+          
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume
