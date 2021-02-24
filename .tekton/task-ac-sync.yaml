@@ -99,7 +99,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -x -o pipefail;
+          set -e -o pipefail;
           echo ${REPOSITORY}
           #echo ${REPOSITORY} | rev | cut -d '/' -f 1 | rev
           folderName=$(echo ${REPOSITORY##*/})
@@ -127,6 +127,10 @@ spec:
           echo "---------------"               
           echo "Retrieved the Flags. Written to the json" 
           git status
+          echo "----git sbranch "
+          git branch 
+          echo "----git status "          
+          git status --porcelain=v1 2>/dev/null | wc -l
           changes=$(git status --porcelain=v1 2>/dev/null | wc -l)
           echo "------+++++++++++++++++++++++++++++=========="                       
           if [ "$changes" = "0" ]; then
@@ -135,7 +139,7 @@ spec:
              echo "changes ---- "
              git add .
              echo "after add "             
-             git commit -c user.name=jojustin -m "sync with app configuration"
+             git commit -m "sync with app configuration"
              echo "after commit " 
              git push --set-upstream origin acsync
              echo "after push origin " 
