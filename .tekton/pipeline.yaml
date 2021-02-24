@@ -20,22 +20,8 @@ spec:
       description: Region of the App Configuration instance
     - name: clusterName
       description: The IBM Cloud Kubernetes cluster name
-#    - name: region
-#      description: Region of the App Configuration instance
-
-#    - name: registryNamespace
-#      description: the ibmcloud registry namespace
-#    - name: cluster
-#      description: The IBM Cloud Kubernetes cluster name
-#    - name: registryRegion
-#      description: the ibmcloud registry region
-#      default: us-south
-#    - name: clusterRegion
-#      description: The IBM Cloud Kubernetes cluster region
-#      default: us-south
-#    - name: clusterNamespace
-#      description: The Kubernetes cluster namespace
-#      default: prod                  
+    - name: featureFilePath
+      description: JSON file path where the App Configuration feature details are stored
     - name: guid
       description: Id of the App Configuration instance
     - name: collection_id
@@ -59,10 +45,12 @@ spec:
           value: $(params.guid)
         - name: region
           value: $(params.region)
-        - name: clusterName
-          value: $(params.clusterName)
         - name: collection_id
           value: $(params.collection_id)
+        - name: featureFilePath
+          value: $(params.featureFilePath)
+        - name: clusterName
+          value: $(params.clusterName)
         - name: task-pvc
           value: $(params.pipeline-pvc)
 #      resources:      

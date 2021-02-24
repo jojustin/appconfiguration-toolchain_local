@@ -24,6 +24,8 @@ spec:
       description: git Token to access GITHUB api      
     - name: clusterName
       description: The IBM Cloud Kubernetes cluster name           
+    - name: featureFilePath
+      description: JSON file path where the App Configuration feature details are stored      
   resourcetemplates:
     - apiVersion: v1
       kind: Secret
@@ -40,6 +42,7 @@ spec:
         RESOURCEGROUP: ${params.resourceGroup}
         IMAGEURL: ${params.imageUrl}
         CLUSTERNAME: ${params.clusterName}
+        FEATUREFILE: ${params.featureFilePath}
     - apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
@@ -77,10 +80,12 @@ spec:
             value: $(params.imageUrl)            
           - name: region
             value: $(params.region)
-          - name: clusterName
-            value: $(params.clusterName)               
           - name: collection_id
             value: $(params.collection_id)
+          - name: featureFilePath
+            value: $(params.featureFilePath)            
+          - name: clusterName
+            value: $(params.clusterName)               
         workspaces:
           - name: pipeline-ws
             persistentVolumeClaim:

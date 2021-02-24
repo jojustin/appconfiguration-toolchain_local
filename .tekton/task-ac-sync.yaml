@@ -24,7 +24,9 @@ spec:
     - name: collection_id
       description: name of the App Configuration collection
     - name: clusterName
-      description: The IBM Cloud Kubernetes cluster name      
+      description: The IBM Cloud Kubernetes cluster name
+    - name: featureFilePath
+      description: JSON file path where the App Configuration feature details are stored         
     - name: continuous-delivery-context-secret
       description: name of the configmap containing the continuous delivery pipeline context secrets
       default: cd-secret
@@ -94,6 +96,8 @@ spec:
           value: $(params.repository)          
         - name: REGION
           value: $(params.region)
+        - name: FEATUREFILEPATH
+          value: $(params.featureFilePath)
         - name: API_KEY
           valueFrom:
             secretKeyRef:
@@ -111,27 +115,21 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -x -o pipefail;
+          set -e -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
           cd $folderName
-          #> feature.json
           if [ "$REGION" = "eu-gb" ]; then
             baseUrl="https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
           else 
             # baseUrl="https://us-south.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
             baseUrl="https://apprapp-dev-37b89de8caeb649450a9af91731f3589-0000.us-south.containers.appdomain.cloud/apprapp/feature/v1/instances/"
           fi
-          ls -la
-          cat feature.json
           configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
           until $(curl -X GET $configUrl -H 'Authorization: $API_KEY' > featuretemp.json); do
             printf 'waiting...'
             sleep 5
           done
-          ls -la
-          #jq --argfile a feature.json --argfile b featuretemp.json -n '($a | (.. | arrays) |= sort) as $a | ($b | (.. | arrays) |= sort) as $b | $a == $b'
-          #ls -la
-          diff -wB  feature.json featuretemp.json  >/dev/null;REPLY=$?
+          diff -wB  $FEATUREFILEPATH featuretemp.json  >/dev/null;REPLY=$?
           if [ ${REPLY} -eq 0 ]
           then
               echo "No feature flag updates.  Continue to deploy"
@@ -141,18 +139,15 @@ spec:
                git checkout $localBranchName         
   
               echo "Files are different"
-              cp featuretemp.json feature.json
+              cp featuretemp.json $FEATUREFILEPATH
               rm -rf featuretemp.json
               userName=$(curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/user | jq -r '.login')
              email=$(curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/user/emails | jq -r '.[0].email')             
              git config user.name "$userName"
              git config user.email "$email"             
-             
-             git config -l             
              git add .
              git commit -m "sync with app configuration"
              echo "after commit " 
-             #git config remote.origin.push HEAD
              git push --set-upstream origin $localBranchName
              echo "after push origin " 
              #curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"App Configuration sync - from pipeline","head":"main","base":'"\"$localBranchName\""'}'
@@ -198,11 +193,6 @@ spec:
           echo "built image $BUILT_IMAGE"
           folderName=$(echo ${REPOSITORY##*/})
           cd $folderName
-          ls -la
-          echo "Beginning of config json display"
-          cat ./feature.json
-          echo "End of config json display"
-          
           ibmcloud config --check-version false
           ibmcloud login -a https://cloud.ibm.com -r $REGION --apikey $API_KEY    
           ibmcloud target -g $RESOURCEGROUP      
