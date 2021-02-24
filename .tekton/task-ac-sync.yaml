@@ -53,13 +53,13 @@ spec:
           #git clone -b $BRANCH $REPOSITORY
           
           #to do - change this
-          replaceStr="$GIT_TOKEN@github"
-          echo "$REPOSITORY"
+          #replaceStr="$GIT_TOKEN@github"
+          #echo "$REPOSITORY"
           echo "-------------"
           #echo "$REPOSITORY" | sed "s/github/$replaceStr/"
-          test=${REPOSITORY/github/replaceStr}
+          #test=${REPOSITORY/github/$replaceStr}
           #test=$(echo "$REPOSITORY" | sed "s/github/$replaceStr/")
-          echo "replace string $test"
+          #echo "replace string $test"
           GIT_URL="https://$GIT_TOKEN@github.com/jojustin/toolchain-sample.git"
 
           echo "Cloning $GIT_URL"
@@ -114,7 +114,7 @@ spec:
           set -e -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
           cd $folderName
-          > feature.json
+          #> feature.json
           if [ "$REGION" = "eu-gb" ]; then
             baseUrl="https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
           else 
