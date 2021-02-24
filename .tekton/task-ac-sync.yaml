@@ -91,6 +91,10 @@ spec:
           value: $(params.repository)          
         - name: REGION
           value: $(params.region)
+        - name: BUILD_NUMBER
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']                       
         - name: GIT_TOKEN
           valueFrom:
             secretKeyRef:
@@ -106,8 +110,9 @@ spec:
           cd $folderName
           
           git branch 
-          git branch acsync $BRANCH        
-          git checkout acsync         
+          localBranchName=acsync_$BUILD_NUMBER
+          git branch $localBranchName $BRANCH     
+          git checkout $localBranchName         
           if [ "$REGION" = "eu-gb" ]; then
             baseUrl="https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
           else 
@@ -141,12 +146,12 @@ spec:
              echo "after add "
              git config user.name "jojustin"
              git config user.email "jojustin@in.ibm.com"             
-             git config -l             
+             #git config -l             
              git commit -m "sync with app configuration"
              echo "after commit " 
-             git config remote.origin.push HEAD
-             #git push --set-upstream origin acsync
-             git push -u origin acsync
+             #git config remote.origin.push HEAD
+             #git push --set-upstream origin $localBranchName
+             git push origin
              echo "after push origin " 
              curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"App Configuration sync - from pipeline","head":"main","base":"acsync"}'
              exit 1
