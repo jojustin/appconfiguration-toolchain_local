@@ -111,7 +111,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -x -o pipefail;
+          set -e -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
           cd $folderName
           > feature.json
@@ -127,6 +127,7 @@ spec:
             printf 'waiting...'
             sleep 5
           done
+          ls -la
           cat feature.json          
           cat featuretemp.json
           if cmp -s feature.json featuretemp.json; then
