@@ -54,10 +54,11 @@ spec:
         - |
           set -e;
           #set -e -o pipefail;
-          echo "Cloning $REPOSITORY";
+          #echo "Cloning $REPOSITORY";
           #git clone -b $BRANCH $REPOSITORY
           # Add the proper creds to the git repository
           #GIT_URL=$(echo "$REPOSITORY" | sed -e "s/:\/\//:\/\/$GIT_AUTH_USER:$GIT_TOKEN@/g")
+          echo $GIT_TOKEN
           #to do - change this 
           GIT_URL=https://$GIT_TOKEN@github.com/jojustin/toolchain-sample.git
           echo "Cloning $GIT_URL"
