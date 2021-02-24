@@ -57,6 +57,8 @@ spec:
           echo $GIT_TOKEN
           #to do - change this
           replaceStr=$GIT_TOKEN@github
+          echo "$GIT_URL"
+          echo "$GIT_URL" | sed "s/github/$replaceStr/"
           test=$(echo "$GIT_URL" | sed "s/github/$replaceStr/")
           echo "replace string $test"
           GIT_URL="https://$GIT_TOKEN@github.com/jojustin/toolchain-sample.git"
