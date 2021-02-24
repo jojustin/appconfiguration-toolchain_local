@@ -118,15 +118,17 @@ spec:
             # baseUrl="https://us-south.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
             baseUrl="https://apprapp-dev-37b89de8caeb649450a9af91731f3589-0000.us-south.containers.appdomain.cloud/apprapp/feature/v1/instances/"
           fi
-          
+          cat feature.json
           configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
           curl -X GET $configUrl -H 'Authorization: $APIKEY' > feature.json
-          cat feature.json
+
           echo "--------------"
-          diff <(curl -X GET $configUrl -H 'Authorization: $APIKEY' > feature.json) <(cat feature.json)
+          differenceB=$(diff <(curl -X GET $configUrl -H 'Authorization: $APIKEY') <(cat feature.json))
+          echo "-----"$differenceB"
+          
           
           echo "--------------"
-             
+          cat feature.json             
           echo "Retrieved the Flags. Written to the json" 
           git status --porcelain=v1 2>/dev/null | wc -l
           changes=$(git status --porcelain=v1 2>/dev/null | wc -l)
