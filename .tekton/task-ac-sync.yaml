@@ -121,7 +121,9 @@ spec:
             # baseUrl="https://us-south.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
             baseUrl="https://apprapp-dev-37b89de8caeb649450a9af91731f3589-0000.us-south.containers.appdomain.cloud/apprapp/feature/v1/instances/"
           fi
+          ls -la
           cat feature.json
+          cat featuretemp.json          
           configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
           until $(curl -X GET $configUrl -H 'Authorization: $API_KEY' > featuretemp.json); do
             printf 'waiting...'
