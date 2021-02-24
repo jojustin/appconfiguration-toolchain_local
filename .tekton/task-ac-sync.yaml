@@ -128,11 +128,9 @@ spec:
           echo "------+++++++++++++++++++++++++++++=========="                       
           if [ "$changes" = "0" ]; then
             echo "no changes"
-          else
-             echo "---- i am here"
-             userName=$(curl -H "Authorization: token $GIT_TOKEN https://api.github.com/user | jq -r '.login')
-             echo "user name is $userName"
-             
+          else 
+             #userName=$(curl -H "Authorization: token $GIT+_TOKEN https://api.github.com/user | jq -r '.login')
+             curl -H "Authorization: token $GIT+_TOKEN https://api.github.com/user
              exit 1
           fi
       volumeMounts:
