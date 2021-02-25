@@ -125,7 +125,7 @@ spec:
             baseUrl="https://apprapp-dev-37b89de8caeb649450a9af91731f3589-0000.us-south.containers.appdomain.cloud/apprapp/feature/v1/instances/"
           fi
           configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
-          until $(curl -X GET $configUrl -H 'Authorization: $API_KEY' > featuretemp.json); do
+          until $(curl -X GET $configUrl -H 'Authorization: $API_KEY'| jq . > featuretemp.json); do
             printf 'waiting...'
             sleep 5
           done
@@ -146,7 +146,7 @@ spec:
              git config user.name "$userName"
              git config user.email "$email"             
              git add .
-             git commit -m "Sync with app configuration - Triggered from Toolchain"
+             git commit -m "App Configuration value changes"
              git push --set-upstream origin $localBranchName
              data='{"title":"App Configuration sync - from pipeline","head":"main","base":"'$localBranchName'"}'
              echo "$data"
