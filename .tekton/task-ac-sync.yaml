@@ -132,7 +132,7 @@ spec:
           diff -wB  "$FEATUREFILEPATH" featuretemp.json  >/dev/null;REPLY=$?
           if [ ${REPLY} -eq 0 ]
           then
-              echo "No feature flag updates.  Continue to deploy"
+              echo "No new App Configuration updates.  Continuing to deploy the app."
           else
                localBranchName=acsync_$BUILD_NUMBER
                git branch $localBranchName $BRANCH     
@@ -150,7 +150,7 @@ spec:
              git push --set-upstream origin $localBranchName
              #data='{"title":"App Configuration sync - from pipeline","head":"main","base":'"$localBranchName"'}'
              #curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d $data
-             echo "Changes are committed.  PR needs to be approved to proceed."
+             echo "New App Configuration updates are committed to the repo.  PR needs to be approved to proceed."
              exit 1
           fi
       volumeMounts:
