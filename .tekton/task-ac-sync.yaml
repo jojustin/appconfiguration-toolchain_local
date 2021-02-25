@@ -144,7 +144,7 @@ spec:
              title="AppConfigurationValueChanges"
              data='{"title":"App Configuration value changes","head":"main","base":"'$localBranchName'"}'
              echo "$data"
-             curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"'$title'","head":"main","base":"'$localBranchName'"}'
+             curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"'$title'","head":"'$localBranchName'","base":"main"}'
              echo "New App Configuration updates are committed to the repo.  PR needs to be approved to proceed."
              exit 1
           fi
