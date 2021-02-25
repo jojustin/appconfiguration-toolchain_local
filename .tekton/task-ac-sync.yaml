@@ -146,11 +146,9 @@ spec:
              git config user.name "$userName"
              git config user.email "$email"             
              git add .
-             git commit -m "sync with app configuration"
-             echo "after commit " 
+             git commit -m "Sync with app configuration - Triggered from Toolchain"
              git push --set-upstream origin $localBranchName
-             echo "after push origin " 
-             data='{"title":"App Configuration sync - from pipeline","head":"main","base":'"$localBranchName"'}'
+             data='{"title":"App Configuration sync - from pipeline","head":"main","base":'"'$localBranchName'"'}'
              curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d $data
              echo "Changes are committed.  PR needs to be approved to proceed."
              exit 1
