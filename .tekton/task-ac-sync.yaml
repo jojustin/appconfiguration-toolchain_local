@@ -127,14 +127,14 @@ spec:
           then
               echo "No new App Configuration updates.  Continuing to deploy the app."
           else
-               localBranchName=acsync_$BUILD_NUMBER
-               git branch $localBranchName $BRANCH     
-               git checkout $localBranchName         
+              localBranchName=acsync_$BUILD_NUMBER
+              git branch $localBranchName $BRANCH     
+              git checkout $localBranchName         
   
-              echo "Files are different"
-              cp featuretemp.json "$FEATUREFILEPATH"
-              rm -rf featuretemp.json
-              userName=$(curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/user | jq -r '.login')
+             echo "Files are different"
+             cp featuretemp.json "$FEATUREFILEPATH"
+             rm -rf featuretemp.json
+             userName=$(curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/user | jq -r '.login')
              email=$(curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/user/emails | jq -r '.[0].email')             
              git config user.name "$userName"
              git config user.email "$email"             
@@ -142,7 +142,7 @@ spec:
              git commit -m "App Configuration value changes"
              git push --set-upstream origin $localBranchName
              title="App Configuration Value Changes"
-             curl -H "Content-Type: application/json" -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"'$title'","head":"'$localBranchName'","base":"main"}'
+             curl -H "Content-Type: application/json" -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"'"${title}"'","head":"'$localBranchName'","base":"main"}'
              echo "New App Configuration updates are committed to the repo.  PR needs to be approved to proceed."
              exit 1
           fi
