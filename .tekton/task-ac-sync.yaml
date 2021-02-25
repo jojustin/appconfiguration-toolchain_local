@@ -141,7 +141,7 @@ spec:
              git add .
              git commit -m "App Configuration value changes"
              git push --set-upstream origin $localBranchName
-             title="App Configuration value changes"
+             title="AppConfigurationValueChanges"
              data='{"title":"App Configuration value changes","head":"main","base":"'$localBranchName'"}'
              echo "$data"
              curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"'$title'","head":"main","base":"'$localBranchName'"}'
