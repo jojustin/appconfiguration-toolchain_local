@@ -49,24 +49,17 @@ spec:
       command: ["/bin/sh", "-c"]
       args:
         - |
-          set -e;
-          #set -e -o pipefail;
-          #echo "Cloning $REPOSITORY";
-          #git clone -b $BRANCH $REPOSITORY
-          
+          set -e;          
           #to do - change this
           #replaceStr="$GIT_TOKEN@github"
           #echo "$REPOSITORY"
-          echo "-------------"
           #echo "$REPOSITORY" | sed "s/github/$replaceStr/"
           #test=${REPOSITORY/github/$replaceStr}
           #test=$(echo "$REPOSITORY" | sed "s/github/$replaceStr/")
           #echo "replace string $test"
           GIT_URL="https://$GIT_TOKEN@github.com/jojustin/toolchain-sample.git"
-
           echo "Cloning $GIT_URL"
           repo_exists=$(git ls-remote $GIT_URL 2>&1 | cut -d':' -f2 | head -1 | awk '{print $1,$2,$3}')
-          echo "$repo_exists"
           if [ "$repo_exists" == "Repository not found." ]; then
             echo "Repo does not exist"
             exit 1
@@ -148,9 +141,10 @@ spec:
              git add .
              git commit -m "App Configuration value changes"
              git push --set-upstream origin $localBranchName
-             data='{"title":"App Configuration sync - from pipeline","head":"main","base":"'$localBranchName'"}'
+             title="App Configuration value changes"
+             data='{"title":"App Configuration value changes","head":"main","base":"'$localBranchName'"}'
              echo "$data"
-             curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d $data
+             curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"'$title'","head":"main","base":"'$localBranchName'"}'
              echo "New App Configuration updates are committed to the repo.  PR needs to be approved to proceed."
              exit 1
           fi
