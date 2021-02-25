@@ -148,7 +148,8 @@ spec:
              git add .
              git commit -m "Sync with app configuration - Triggered from Toolchain"
              git push --set-upstream origin $localBranchName
-             #data='{"title":"App Configuration sync - from pipeline","head":"main","base":'"$localBranchName"'}'
+             data='{"title":"App Configuration sync - from pipeline","head":"main","base":"'$localBranchName'"}'
+             echo "$data"
              #curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d $data
              echo "New App Configuration updates are committed to the repo.  PR needs to be approved to proceed."
              exit 1
