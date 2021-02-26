@@ -18,7 +18,10 @@ spec:
     - name: collection_id
       description: name of the App Configuration collection
     - name: featureFilePath
-      description: JSON file path where the App Configuration feature details are stored         
+      description: JSON file path where the App Configuration feature details are stored
+    - name: baseUrl
+      description: JSON file path where the App Configuration feature details are stored
+      default: https://apprapp.cloud.ibm.com/apprapp/feature/v1/instances/         
     - name: continuous-delivery-context-secret
       description: name of the configmap containing the continuous delivery pipeline context secrets
       default: cd-secret
@@ -71,7 +74,9 @@ spec:
         - name: BRANCH
           value: $(params.branch)
         - name: REPOSITORY
-          value: $(params.repository)          
+          value: $(params.repository)
+        - name: BASEURL
+          value: $(params.baseUrl)                      
         - name: REGION
           value: $(params.region)
         - name: FEATUREFILEPATH
@@ -96,22 +101,31 @@ spec:
           set -x -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
           cd $folderName
-          if [ "$REGION" = "eu-gb" ]; then
-            baseUrl="https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
-          else 
-            # baseUrl="https://us-south.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
-            baseUrl="https://apprapp-dev-37b89de8caeb649450a9af91731f3589-0000.us-south.containers.appdomain.cloud/apprapp/feature/v1/instances/"
-          fi
-          configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
-          until $(curl -X GET $configUrl -H 'Authorization: $API_KEY'| jq . > featuretemp.json); do
-            printf 'waiting...'
-            sleep 5
-          done
-          diff -wB  "$FEATUREFILEPATH" featuretemp.json  >/dev/null;REPLY=$?
-          if [ ${REPLY} -eq 0 ]
+          if [ -z "$REGION" ]
           then
-              echo "No new App Configuration updates.  Continuing to deploy the app."
+            echo "\$REGION is empty"
+            exit 1
           else
+            echo "\$REGION is NOT empty"
+            subdomain=${REGION}.apprapp
+            BASEURL=${BASEURL/.apprapp/${subdomain}}
+            echo "replaced base url  "$BASEURL"
+            if [ "$REGION" = "eu-gb" ]; then
+              baseUrl="https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
+            else 
+               # baseUrl="https://us-south.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
+               baseUrl="https://apprapp-dev-37b89de8caeb649450a9af91731f3589-0000.us-south.containers.appdomain.cloud/apprapp/feature/v1/instances/"
+            fi
+            configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
+            until $(curl -X GET $configUrl -H 'Authorization: $API_KEY'| jq . > featuretemp.json); do
+               printf 'waiting...'
+               sleep 5
+            done
+            diff -wB  "$FEATUREFILEPATH" featuretemp.json  >/dev/null;REPLY=$?
+            if [ ${REPLY} -eq 0 ]
+            then
+                echo "No new App Configuration updates.  Continuing to deploy the app."
+            else
               localBranchName=acsync_$BUILD_NUMBER
               git branch $localBranchName $BRANCH     
               git checkout $localBranchName         
@@ -130,6 +144,8 @@ spec:
              curl -H "Content-Type: application/json" -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/toolchain-sample/pulls -d '{"title":"'"${title}"'","head":"'$localBranchName'","base":"main"}'
              echo "New App Configuration updates are committed to the repo.  PR needs to be approved to proceed."
              exit 1
+          fi
+            
           fi
       volumeMounts:
         - mountPath: /artifacts

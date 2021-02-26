@@ -19,7 +19,7 @@ spec:
     - name: clusterName
       description: The IBM Cloud Kubernetes cluster name
     - name: region
-      description: Region of the App Configuration instance      
+      description: Region of the App Configuration instance
   tasks:
     - name: appconfiguration-ci
       taskRef: 
