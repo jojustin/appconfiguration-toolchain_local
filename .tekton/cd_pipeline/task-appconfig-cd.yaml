@@ -100,7 +100,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -x -o pipefail;
+          set -e -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
           cd $folderName
           if [ -z "$REGION" ]
