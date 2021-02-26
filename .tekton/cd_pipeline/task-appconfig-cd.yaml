@@ -43,13 +43,13 @@ spec:
         - |
           set -e;          
           #to do - change this
-          replaceStr="$GIT_TOKEN@github"
+          #replaceStr="$GIT_TOKEN@github"
           #echo "$REPOSITORY"
           #echo "$REPOSITORY" | sed "s/github/$replaceStr/"
           #test=${REPOSITORY/github/$replaceStr}
           #test=$(echo "$REPOSITORY" | sed "s/github/$replaceStr/")
-          test=$(echo ${REPOSITORY//github/$replaceStr})
-          echo "replace string $test"
+          #test=$(echo ${REPOSITORY//github/$replaceStr})
+          #echo "replace string $test"
           GIT_URL="https://$GIT_TOKEN@github.com/jojustin/toolchain-sample.git"
           echo "Cloning $GIT_URL"
           repo_exists=$(git ls-remote $GIT_URL 2>&1 | cut -d':' -f2 | head -1 | awk '{print $1,$2,$3}')
