@@ -18,6 +18,8 @@ spec:
       description: Id of the App Configuration instance
     - name: collection_id
       description: name of the App Configuration collection
+    - name: apikey
+      description: the ibmcloud api key      
   tasks:
     - name: appconfiguration-cd
       taskRef: 
@@ -35,5 +37,7 @@ spec:
           value: $(params.collection_id)
         - name: featureFilePath
           value: $(params.featureFilePath)
+        - name: apikey
+          value: $(params.apikey)          
         - name: task-pvc
           value: $(params.pipeline-pvc)
