@@ -98,7 +98,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -x -o pipefail;
+          set -e -x -o pipefail;
           BUILT_IMAGE="$IMAGEURL:$BUILD_NUMBER"
           echo "built image $BUILT_IMAGE"
           folderName=$(echo ${REPOSITORY##*/})
@@ -141,7 +141,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -x -o pipefail
+          set -e -x -o pipefail
           echo "cluster name from param is $clusterName"
           folderName=$(echo ${REPOSITORY##*/})
           cd $folderName
