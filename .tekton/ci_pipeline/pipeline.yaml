@@ -10,8 +10,6 @@ spec:
       description: the git repo
     - name: branch
       description: the branch for the git repo
-#    - name: apikey
-#      description: the ibmcloud api key
     - name: resourceGroup
       description: Region of the App Configuration instance
     - name: imageUrl
@@ -33,8 +31,6 @@ spec:
           value: $(params.resourceGroup)
         - name: imageUrl
           value: $(params.imageUrl)
-#        - name: apikey
-#          value: $(params.apikey)
         - name: region
           value: $(params.region)
         - name: clusterName

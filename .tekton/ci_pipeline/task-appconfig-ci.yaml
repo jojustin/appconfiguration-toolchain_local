@@ -13,8 +13,6 @@ spec:
       default: master
     - name: region
       description: Region of the App Configuration instance
-#    - name: apikey
-#      description: the ibmcloud api key
     - name: resourceGroup
       description: Region of the App Configuration instance
     - name: imageUrl
