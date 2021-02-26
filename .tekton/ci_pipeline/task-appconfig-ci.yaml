@@ -11,14 +11,8 @@ spec:
     - name: branch
       description: the branch for the git repo
       default: master
-    - name: guid
-      description: Id of the App Configuration instance
     - name: region
       description: Region of the App Configuration instance
-    - name: collection_id
-      description: name of the App Configuration collection
-    - name: featureFilePath
-      description: JSON file path where the App Configuration feature details are stored
     - name: apikey
       description: the ibmcloud api key
     - name: resourceGroup

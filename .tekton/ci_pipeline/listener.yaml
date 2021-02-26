@@ -12,10 +12,6 @@ spec:
       description: the ibmcloud api key
     - name: region
       description: Region of the App Configuration instance
-    - name: guid
-      description: Id of the App Configuration instance
-    - name: collection_id
-      description: name of the App Configuration collection
     - name: resourceGroup
       description: Region of the App Configuration instance
     - name: imageUrl
@@ -24,8 +20,6 @@ spec:
       description: git Token to access GITHUB api      
     - name: clusterName
       description: The IBM Cloud Kubernetes cluster name           
-    - name: featureFilePath
-      description: JSON file path where the App Configuration feature details are stored      
   resourcetemplates:
     - apiVersion: v1
       kind: Secret
@@ -37,12 +31,9 @@ spec:
         parameters: $(params.parameters)
         GIT_TOKEN: $(params.gitToken)
         REGION: ${params.region}
-        GUID: ${params.guid}        
-        COLLECTIONID: ${params.collection_id}
         RESOURCEGROUP: ${params.resourceGroup}
         IMAGEURL: ${params.imageUrl}
         CLUSTERNAME: ${params.clusterName}
-        FEATUREFILE: ${params.featureFilePath}
     - apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
@@ -72,18 +63,12 @@ spec:
             value: $(params.branch)
           - name: apikey
             value: $(params.apikey)
-          - name: guid
-            value: $(params.guid)
           - name: resourceGroup
             value: $(params.resourceGroup)
           - name: imageUrl
             value: $(params.imageUrl)            
           - name: region
             value: $(params.region)
-          - name: collection_id
-            value: $(params.collection_id)
-          - name: featureFilePath
-            value: $(params.featureFilePath)            
           - name: clusterName
             value: $(params.clusterName)               
         workspaces:
