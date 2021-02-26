@@ -98,7 +98,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -e -o pipefail;
+          set -x -o pipefail;
           BUILT_IMAGE="$IMAGEURL:$BUILD_NUMBER"
           echo "built image $BUILT_IMAGE"
           folderName=$(echo ${REPOSITORY##*/})
