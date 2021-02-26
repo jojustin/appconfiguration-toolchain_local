@@ -111,7 +111,8 @@ spec:
             echo "\$REGION is NOT empty"
             replaceStr=".apprapp"
             subdomain=$REGION$replaceStr
-            echo ${BASEURL/$replaceStr/$subdomain}
+            generatedBaseUrl=${file_name/.apprapp/$subdomain}
+            echo "base url is $generatedBaseUrl"
             if [ "$REGION" = "eu-gb" ]; then
               baseUrl="https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
             else 
