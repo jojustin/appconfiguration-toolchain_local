@@ -17,8 +17,6 @@ spec:
       description: Region of the App Configuration instance
     - name: collection_id
       description: name of the App Configuration collection
-    - name: apikey
-      description: the ibmcloud api key      
     - name: featureFilePath
       description: JSON file path where the App Configuration feature details are stored         
     - name: continuous-delivery-context-secret
@@ -56,6 +54,7 @@ spec:
           fi
           echo $BRANCH
           git clone -b $BRANCH $GIT_URL
+
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume
