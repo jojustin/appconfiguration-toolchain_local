@@ -53,7 +53,6 @@ spec:
           value: $(params.clusterName)
         - name: task-pvc
           value: $(params.pipeline-pvc)
-  tasks:
     - name: appconfiguration-ci
       taskRef: 
         name: appconfiguration-ci
