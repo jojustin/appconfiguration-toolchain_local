@@ -109,6 +109,8 @@ spec:
             exit 1
           else
             echo "\$REGION is NOT empty"
+            echo "base url is $baseUrl"
+            echo "BASEURL is $BASEURL"            
             replaceStr=".apprapp"
             subdomain=$REGION$replaceStr
             generatedBaseUrl=${BASEURL/.apprapp/$subdomain}
