@@ -25,7 +25,6 @@ spec:
         name: cd-secret
       type: Opaque
       stringData:
-        parameters: $(params.parameters)
         GIT_TOKEN: $(params.gitToken)
         REGION: ${params.region}
         GUID: ${params.guid}        
