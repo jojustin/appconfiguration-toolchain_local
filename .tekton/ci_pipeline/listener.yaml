@@ -27,7 +27,7 @@ spec:
         name: cd-secret
       type: Opaque
       stringData:
-        API_KEY: $(params.apikey)
+#        API_KEY: $(params.apikey)
         parameters: $(params.parameters)
         GIT_TOKEN: $(params.gitToken)
         REGION: ${params.region}
@@ -61,8 +61,8 @@ spec:
             value: $(params.repository)
           - name: branch
             value: $(params.branch)
-          - name: apikey
-            value: $(params.apikey)
+#          - name: apikey
+#            value: $(params.apikey)
           - name: resourceGroup
             value: $(params.resourceGroup)
           - name: imageUrl
