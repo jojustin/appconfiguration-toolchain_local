@@ -11,6 +11,8 @@ spec:
     - name: branch
       description: the branch for the git repo
       default: master
+    - name: apikey
+      description: Apikey of the App Configuration instance
     - name: guid
       description: Id of the App Configuration instance
     - name: region
