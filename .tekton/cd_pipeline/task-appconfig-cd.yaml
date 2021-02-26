@@ -113,8 +113,8 @@ spec:
             echo "BASEURL is $BASEURL"            
             replaceStr=".apprapp"
             subdomain=$REGION$replaceStr
-            generatedBaseUrl=${BASEURL/.apprapp/$subdomain}
-            echo "base url is $generatedBaseUrl"
+            generatedBaseUrl=${BASEURL/apprapp/$subdomain}
+            echo "generatedBaseUrl is $generatedBaseUrl"
             if [ "$REGION" = "eu-gb" ]; then
               baseUrl="https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
             else 
