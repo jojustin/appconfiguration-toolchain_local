@@ -100,7 +100,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -e -o pipefail;
+          set -v -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
           cd $folderName
           if [ -z "$REGION" ]
@@ -108,18 +108,11 @@ spec:
             echo "\$REGION is empty"
             exit 1
           else
-            echo "\$REGION is NOT empty"
-            echo "base url is $baseUrl"
-            echo "BASEURL is $BASEURL"            
             subdomain=$REGION.apprapp
-            generatedBaseUrl=${BASEURL/apprapp/$subdomain}
-            echo "generatedBaseUrl is $generatedBaseUrl"
-            if [ "$REGION" = "eu-gb" ]; then
-              baseUrl="https://eu-gb.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
-            else 
-               # baseUrl="https://us-south.apprapp.cloud.ibm.com/apprapp/feature/v1/instances/"
-               baseUrl="https://apprapp-dev-37b89de8caeb649450a9af91731f3589-0000.us-south.containers.appdomain.cloud/apprapp/feature/v1/instances/"
-            fi
+            baseUrl=${BASEURL/apprapp/$subdomain}
+            #only for local testing
+            baseUrl="https://apprapp-dev-37b89de8caeb649450a9af91731f3589-0000.us-south.containers.appdomain.cloud/apprapp/feature/v1/instances/"
+            
             configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
             until $(curl -X GET $configUrl -H 'Authorization: $API_KEY'| jq . > featuretemp.json); do
                printf 'waiting...'
