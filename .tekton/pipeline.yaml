@@ -27,9 +27,9 @@ spec:
     - name: collection_id
       description: name of the App Configuration collection
   tasks:
-    - name: appconfiguration-sync
+    - name: appconfiguration-cd
       taskRef: 
-        name: ac-sync-task
+        name: appconfiguration-cd
       params:
         - name: repository
           value: $(params.repository)
@@ -53,7 +53,30 @@ spec:
           value: $(params.clusterName)
         - name: task-pvc
           value: $(params.pipeline-pvc)
-#      resources:      
-#        outputs:
-#          - name: builtImage
-#            resource: app-image
+  tasks:
+    - name: appconfiguration-ci
+      taskRef: 
+        name: appconfiguration-ci
+      params:
+        - name: repository
+          value: $(params.repository)
+        - name: branch
+          value: $(params.branch)
+        - name: resourceGroup
+          value: $(params.resourceGroup)
+        - name: imageUrl
+          value: $(params.imageUrl)
+        - name: apikey
+          value: $(params.apikey)
+        - name: guid
+          value: $(params.guid)
+        - name: region
+          value: $(params.region)
+        - name: collection_id
+          value: $(params.collection_id)
+        - name: featureFilePath
+          value: $(params.featureFilePath)
+        - name: clusterName
+          value: $(params.clusterName)
+        - name: task-pvc
+          value: $(params.pipeline-pvc)          

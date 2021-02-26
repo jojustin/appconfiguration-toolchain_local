@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: ac-sync-task
+  name: appconfiguration-cd
 spec:
   params:
     - name: task-pvc
@@ -51,12 +51,13 @@ spec:
         - |
           set -e;          
           #to do - change this
-          #replaceStr="$GIT_TOKEN@github"
+          replaceStr="$GIT_TOKEN@github"
           #echo "$REPOSITORY"
           #echo "$REPOSITORY" | sed "s/github/$replaceStr/"
           #test=${REPOSITORY/github/$replaceStr}
           #test=$(echo "$REPOSITORY" | sed "s/github/$replaceStr/")
-          #echo "replace string $test"
+          test=$(echo ${REPOSITORY//github/$replaceStr})
+          echo "replace string $test"
           GIT_URL="https://$GIT_TOKEN@github.com/jojustin/toolchain-sample.git"
           echo "Cloning $GIT_URL"
           repo_exists=$(git ls-remote $GIT_URL 2>&1 | cut -d':' -f2 | head -1 | awk '{print $1,$2,$3}')
@@ -68,7 +69,6 @@ spec:
           fi
           echo $BRANCH
           git clone -b $BRANCH $GIT_URL
-          ls -la
 
       volumeMounts:
         - mountPath: /artifacts
@@ -146,104 +146,6 @@ spec:
              echo "New App Configuration updates are committed to the repo.  PR needs to be approved to proceed."
              exit 1
           fi
-      volumeMounts:
-        - mountPath: /artifacts
-          name: task-volume
-        - mountPath: /steps
-          name: steps-volume
-    - name: docker-build
-      image: ibmcom/pipeline-base-image
-      workingDir: /artifacts
-      env:
-        - name: REGION
-          value: $(params.region)
-        - name: IMAGEURL
-          value: $(params.imageUrl)        
-        - name: RESOURCEGROUP
-          value: $(params.resourceGroup)
-        - name: REPOSITORY
-          value: $(params.repository)          
-        - name: BUILD_NUMBER
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']             
-        - name: API_KEY 
-          valueFrom:
-            secretKeyRef:
-              name: $(params.continuous-delivery-context-secret)
-              key: API_KEY        
-        - name: GIT_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: $(params.continuous-delivery-context-secret)
-              key: GIT_TOKEN                                 
-      command: ["/bin/bash", "-c"]
-      args:
-        - |
-          set -e -o pipefail;
-          BUILT_IMAGE="$IMAGEURL:$BUILD_NUMBER"
-          echo "built image $BUILT_IMAGE"
-          folderName=$(echo ${REPOSITORY##*/})
-          cd $folderName
-          ibmcloud config --check-version false
-          ibmcloud login -a https://cloud.ibm.com -r $REGION --apikey $API_KEY    
-          ibmcloud target -g $RESOURCEGROUP      
-          ibmcloud cr build -t $BUILT_IMAGE .
-          #BUILT_IMAGE="$REGISTRY_URL/$REGISTRY_NAMESPACE/$IMAGE_NAME:$BUILD_NUMBER"
-          echo "image is $BUILT_IMAGE"
-          echo "Docker Image has been pushed to us.icr.io"
-      volumeMounts:
-        - mountPath: /artifacts
-          name: task-volume
-        - mountPath: /steps
-          name: steps-volume
-    - name: deploy
-      image: ibmcom/pipeline-base-image
-      workingDir: /artifacts
-      env:
-        - name: imageUrl
-          value: $(params.imageUrl)
-        - name: REGION
-          value: $(params.region)             
-        - name: clusterName
-          value: $(params.clusterName)
-        - name: resourceGroup
-          value: $(params.resourceGroup)
-        - name: REPOSITORY
-          value: $(params.repository)          
-        - name: BUILD_NUMBER
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']   
-        - name: API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: $(params.continuous-delivery-context-secret)
-              key: API_KEY  
-      command: ["/bin/bash", "-c"]
-      args:
-        - |
-          set -x -o pipefail
-          echo "cluster name from param is $clusterName"
-          folderName=$(echo ${REPOSITORY##*/})
-          cd $folderName
-          BUILT_IMAGE="$imageUrl:$BUILD_NUMBER"
-          ibmcloud config --check-version false
-          ibmcloud login -a https://cloud.ibm.com -r $REGION --apikey $API_KEY
-          ibmcloud target -g $resourceGroup
-          ibmcloud cr info
-          
-          ibmcloud ks cluster ls
-          ibmcloud ks cluster config --cluster $clusterName
-          
-          DEPLOYMENT_FILE="kube/deployment.yaml"
-          echo "deployment file $DEPLOYMENT_FILE"
-          sed -i 's=$IMAGE='"$BUILT_IMAGE"'=g' $DEPLOYMENT_FILE
-          
-          cat $DEPLOYMENT_FILE
-          echo "kubectl apply -f $DEPLOYMENT_FILE"
-          kubectl apply -f $DEPLOYMENT_FILE
-          kubectl apply -f kube/service.yaml
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume
