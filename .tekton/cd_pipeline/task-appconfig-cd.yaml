@@ -121,7 +121,7 @@ spec:
             diff -wB  "$FEATUREFILEPATH" featuretemp.json  >/dev/null;REPLY=$?
             if [ ${REPLY} -eq 0 ]
             then
-                echo "No new App Configuration updates.  Continuing to deploy the app."
+                echo "No new App Configuration updates.  Application is ready to be deployed"
             else
               localBranchName=acsync_$BUILD_NUMBER
               git branch $localBranchName $BRANCH     
