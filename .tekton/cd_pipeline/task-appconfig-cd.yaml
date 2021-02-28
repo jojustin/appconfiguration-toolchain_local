@@ -104,6 +104,7 @@ spec:
       args:
         - |
           set -e -x -o pipefail;
+          echo "REPOSITORY is $REPOSITORY"
           folderName=$(echo ${REPOSITORY##*/})
           echo "folder name is $folderName"
           ls -la
