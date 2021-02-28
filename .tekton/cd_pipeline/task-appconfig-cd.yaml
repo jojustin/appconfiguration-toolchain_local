@@ -103,8 +103,9 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -e -v -o pipefail;
+          set -e -x -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
+          echo "folder name is $folderName"
           ls -la
           cd $folderName/nodejs
           if [ -z "$REGION" ]
