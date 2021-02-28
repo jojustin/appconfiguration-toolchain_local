@@ -120,11 +120,11 @@ spec:
                printf 'waiting...'
                sleep 5
             done
-            cat feature.json
-            cat featuretemp.json
+            #cat feature.json
+            #cat featuretemp.json
             
             diff -wB  "$FEATUREFILEPATH" featuretemp.json  >/dev/null;REPLY=$?
-            echo "Reply is $REPLY"
+            #echo "Reply is $REPLY"
             if [ ${REPLY} -eq 0 ]
             then
                 echo "No new App Configuration updates.  Application is ready to be deployed"
