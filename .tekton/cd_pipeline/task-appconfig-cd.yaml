@@ -107,7 +107,6 @@ spec:
           folderName=$(echo ${REPOSITORY##*/})
           #customize as per the app folder structure
           cd $folderName/nodejs
-          ls -la
           if [ -z "$REGION" ]
           then
             echo "\$REGION is empty"
@@ -123,7 +122,11 @@ spec:
                printf 'waiting...'
                sleep 5
             done
+            ls -la
+            cat feature.json
+            cat featuretemp.json
             diff -wB  "$FEATUREFILEPATH" featuretemp.json  >/dev/null;REPLY=$?
+            echo "REPLY is $REPLY"
             if [ ${REPLY} -eq 0 ]
             then
                 echo "No new App Configuration updates.  Application is ready to be deployed"
