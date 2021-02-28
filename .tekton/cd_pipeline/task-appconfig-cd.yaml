@@ -105,7 +105,8 @@ spec:
         - |
           set -e -x -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
-          cd $folderName/
+          #customize as per the app folder structure
+          cd $folderName/nodejs
           ls -la
           if [ -z "$REGION" ]
           then
