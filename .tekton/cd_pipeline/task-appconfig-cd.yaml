@@ -100,9 +100,9 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -v -o pipefail;
+          set -e -v -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
-          cd $folderName
+          cd $folderName/nodejs
           if [ -z "$REGION" ]
           then
             echo "\$REGION is empty"
@@ -111,7 +111,7 @@ spec:
             subdomain=$REGION.apprapp
             baseUrl=${BASEURL/apprapp/$subdomain}
             #only for local testing
-            baseUrl="https://apprapp-dev-37b89de8caeb649450a9af91731f3589-0000.us-south.containers.appdomain.cloud/apprapp/feature/v1/instances/"
+            #baseUrl="https://apprapp-dev-37b89de8caeb649450a9af91731f3589-0000.us-south.containers.appdomain.cloud/apprapp/feature/v1/instances/"
             
             configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
             until $(curl -X GET $configUrl -H 'Authorization: $API_KEY'| jq . > featuretemp.json); do
