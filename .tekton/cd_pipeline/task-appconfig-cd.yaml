@@ -50,9 +50,10 @@ spec:
           #to do - change this
           replacestr=$GIT_TOKEN@github
           sampleGitUrl=${GIT_URL/github/$replacestr}
-          #GIT_URL="https://$GIT_TOKEN@github.com/jojustin/toolchain-sample.git"
+          echo "sample url $sampleGitUrl"
+          GIT_URL="https://$GIT_TOKEN@github.com/jojustin/appconfiguration-samples.git"
           echo "Cloning $sampleGitUrl"
-          repo_exists=$(git ls-remote $sampleGitUrl 2>&1 | cut -d':' -f2 | head -1 | awk '{print $1,$2,$3}')
+          repo_exists=$(git ls-remote $GIT_URL 2>&1 | cut -d':' -f2 | head -1 | awk '{print $1,$2,$3}')
           if [ "$repo_exists" == "Repository not found." ]; then
             echo "Repo does not exist"
             exit 1
@@ -60,7 +61,7 @@ spec:
             echo "Repo exists"
           fi
           echo $BRANCH
-          git clone -b $BRANCH $sampleGitUrl
+          git clone -b $BRANCH $GIT_URL
 
       volumeMounts:
         - mountPath: /artifacts
