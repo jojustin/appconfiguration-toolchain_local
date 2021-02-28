@@ -104,11 +104,9 @@ spec:
       args:
         - |
           set -e -x -o pipefail;
-          echo "REPOSITORY is $REPOSITORY"
           folderName=$(echo ${REPOSITORY##*/})
-          echo "folder name is $folderName"
+          cd $folderName/
           ls -la
-          cd $folderName/nodejs
           if [ -z "$REGION" ]
           then
             echo "\$REGION is empty"
