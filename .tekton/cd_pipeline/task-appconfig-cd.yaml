@@ -103,7 +103,7 @@ spec:
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -e -x -o pipefail;
+          set -e -v -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
           #customize as per the app folder structure
           cd $folderName/nodejs
