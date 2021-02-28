@@ -50,7 +50,7 @@ spec:
           #to do - change this
           replacestr=$GIT_TOKEN@github
           sampleGitUrl=${GIT_URL/github/$replacestr}
-          echo "sample url $sampleGitUrl"
+          echo "sample url -----$sampleGitUrl"
           GIT_URL="https://$GIT_TOKEN@github.com/jojustin/appconfiguration-samples.git"
           echo "Cloning $sampleGitUrl"
           repo_exists=$(git ls-remote $GIT_URL 2>&1 | cut -d':' -f2 | head -1 | awk '{print $1,$2,$3}')
@@ -105,6 +105,7 @@ spec:
         - |
           set -e -v -o pipefail;
           folderName=$(echo ${REPOSITORY##*/})
+          ls -la
           cd $folderName/nodejs
           if [ -z "$REGION" ]
           then
