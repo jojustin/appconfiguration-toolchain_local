@@ -112,7 +112,7 @@ spec:
             baseUrl=${BASEURL/apprapp/$subdomain}
             
             configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
-            until $(curl -X GET $configUrl -H 'Authorization: $API_KEY'| jq . > featuretemp.json); do
+            until $(curl -X GET $configUrl -H 'Authorization: HZnt9mG6eAPDQ_IO6UONAuf-q9KgO44QrfMO_sdKrwgY'| jq . > featuretemp.json); do
                printf 'waiting...'
                sleep 5
             done

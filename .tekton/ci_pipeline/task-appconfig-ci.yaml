@@ -44,16 +44,8 @@ spec:
       args:
         - |
           set -x;          
-          #to do - change this
-          replaceStr="$GIT_TOKEN@github"
-          #echo "$REPOSITORY"
-          #echo "$REPOSITORY" | sed "s/github/$replaceStr/"
-          #test=${REPOSITORY/github/$replaceStr}
-          #test=$(echo "$REPOSITORY" | sed "s/github/$replaceStr/")
-          test=$(echo ${REPOSITORY//github/$replaceStr})
-          echo "replace string $test"
-          GIT_URL="https://$GIT_TOKEN@github.com/jojustin/toolchain-sample.git"
-          echo "Cloning $GIT_URL"
+          replacestr=$GIT_TOKEN@github
+          GIT_URL=${REPOSITORY/github/$replacestr}
           repo_exists=$(git ls-remote $GIT_URL 2>&1 | cut -d':' -f2 | head -1 | awk '{print $1,$2,$3}')
           if [ "$repo_exists" == "Repository not found." ]; then
             echo "Repo does not exist"
@@ -63,7 +55,6 @@ spec:
           fi
           echo $BRANCH
           git clone -b $BRANCH $GIT_URL
-
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume
