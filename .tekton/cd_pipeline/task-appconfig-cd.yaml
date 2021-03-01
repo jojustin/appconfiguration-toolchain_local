@@ -11,8 +11,6 @@ spec:
     - name: branch
       description: the branch for the git repo
       default: master
-    - name: apikey
-      description: Apikey of the App Configuration instance
     - name: guid
       description: Id of the App Configuration instance
     - name: region
@@ -112,8 +110,7 @@ spec:
             baseUrl=${BASEURL/apprapp/$subdomain}
             
             configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
-            echo "api key $API_KEY"
-            until $(curl -X GET $configUrl -H 'Authorization: ${API_KEY}'| jq . > featuretemp.json); do
+            until $(curl -X GET $configUrl -H 'Authorization: HZnt9mG6eAPDQ_IO6UONAuf-q9KgO44QrfMO_sdKrwgY'| jq . > featuretemp.json); do
                printf 'waiting...'
                sleep 5
             done

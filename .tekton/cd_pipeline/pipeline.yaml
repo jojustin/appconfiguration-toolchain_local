@@ -18,8 +18,6 @@ spec:
       description: Id of the App Configuration instance
     - name: collection_id
       description: name of the App Configuration collection
-    - name: apikey
-      description: Apikey of the App Configuration instance
   tasks:
     - name: appconfiguration-cd
       taskRef: 
@@ -37,7 +35,5 @@ spec:
           value: $(params.collection_id)
         - name: featureFilePath
           value: $(params.featureFilePath)
-        - name: apikey
-          value: $(params.apikey)          
         - name: task-pvc
           value: $(params.pipeline-pvc)

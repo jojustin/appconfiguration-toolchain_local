@@ -66,8 +66,6 @@ spec:
             value: $(params.region)
           - name: collection_id
             value: $(params.collection_id)
-          - name: apikey
-            value: $(params.apikey)            
           - name: featureFilePath
             value: $(params.featureFilePath)            
         workspaces:
