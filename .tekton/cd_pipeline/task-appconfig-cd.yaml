@@ -31,7 +31,12 @@ spec:
         valueFrom:
           secretKeyRef:
             name: $(params.continuous-delivery-context-secret)
-            key: GIT_TOKEN            
+            key: GIT_TOKEN
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: $(params.continuous-delivery-context-secret)
+              key: API_KEY                                
   steps:
     - name: git-clone
       image: icr.io/continuous-delivery/pipeline/tekton/alpine-git:latest
@@ -80,20 +85,10 @@ spec:
           value: $(params.region)
         - name: FEATUREFILEPATH
           value: $(params.featureFilePath)
-        - name: API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: $(params.continuous-delivery-context-secret)
-              key: API_KEY          
         - name: BUILD_NUMBER
           valueFrom:
             fieldRef:
               fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']                       
-        - name: GIT_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: $(params.continuous-delivery-context-secret)
-              key: GIT_TOKEN                                 
       command: ["/bin/bash", "-c"]
       args:
         - |
