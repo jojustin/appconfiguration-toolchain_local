@@ -47,21 +47,8 @@ spec:
       args:
         - |
           set -e;          
-          #to do - change this
           replacestr=$GIT_TOKEN@github
           GIT_URL=${REPOSITORY/github/$replacestr}
-
-          echo "$REPOSITORY"
-          echo "$REPOSITORY" | sed "s/github/$replaceStr/"
-          test=${REPOSITORY/github/$replaceStr}
-          test1=$(echo "$REPOSITORY" | sed "s/github/$replaceStr/")
-          #test=$(echo ${REPOSITORY//github/$replaceStr})
-          echo "replace string $test"
-          echo "replace string $test1"
-          
-          echo "sample url -----++++++++$sampleGitUrl"
-          #GIT_URL="https://$GIT_TOKEN@github.com/jojustin/appconfiguration-samples.git"
-          echo "Cloning $sampleGitUrl"
           repo_exists=$(git ls-remote $GIT_URL 2>&1 | cut -d':' -f2 | head -1 | awk '{print $1,$2,$3}')
           if [ "$repo_exists" == "Repository not found." ]; then
             echo "Repo does not exist"
