@@ -43,7 +43,7 @@ spec:
       command: ["/bin/sh", "-c"]
       args:
         - |
-          set -x;          
+          set -e;          
           replacestr=$GIT_TOKEN@github
           GIT_URL=${REPOSITORY/github/$replacestr}
           repo_exists=$(git ls-remote $GIT_URL 2>&1 | cut -d':' -f2 | head -1 | awk '{print $1,$2,$3}')
@@ -145,6 +145,11 @@ spec:
           ibmcloud ks cluster ls
           ibmcloud ks cluster config --cluster $clusterName
           
+          kubectl apply -f kube/secret.yaml
+          kubectl apply -f kube/statefulsetmongo.yaml
+          kubectl apply -f kube/servicemongo.yaml
+          kubectl get secret all-icr-io --namespace=default -o yaml | grep -v '^\s*namespace:\s' | kubectl apply --namespace=appconfig -f -
+          
           DEPLOYMENT_FILE="kube/deployment.yaml"
           echo "deployment file $DEPLOYMENT_FILE"
           sed -i 's=$IMAGE='"$BUILT_IMAGE"'=g' $DEPLOYMENT_FILE
@@ -152,7 +157,7 @@ spec:
           cat $DEPLOYMENT_FILE
           echo "kubectl apply -f $DEPLOYMENT_FILE"
           kubectl apply -f $DEPLOYMENT_FILE
-          kubectl apply -f kube/service.yaml
+          kubectl apply -f kube/servicenode.yaml
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume
