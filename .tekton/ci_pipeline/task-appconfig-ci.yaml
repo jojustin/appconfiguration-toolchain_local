@@ -93,7 +93,7 @@ spec:
           BUILT_IMAGE="$IMAGEURL:$BUILD_NUMBER"
           echo "built image $BUILT_IMAGE"
           folderName=$(echo ${REPOSITORY##*/})
-          cd $folderName
+          cd $folderName/nodejs
           ibmcloud config --check-version false
           ibmcloud login -a https://cloud.ibm.com -r $REGION --apikey $API_KEY    
           ibmcloud target -g $RESOURCEGROUP      
@@ -135,7 +135,7 @@ spec:
           set -e -x -o pipefail
           echo "cluster name from param is $clusterName"
           folderName=$(echo ${REPOSITORY##*/})
-          cd $folderName
+          cd $folderName/nodejs
           BUILT_IMAGE="$imageUrl:$BUILD_NUMBER"
           ibmcloud config --check-version false
           ibmcloud login -a https://cloud.ibm.com -r $REGION --apikey $API_KEY
