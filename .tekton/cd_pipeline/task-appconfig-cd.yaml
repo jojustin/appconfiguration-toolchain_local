@@ -11,17 +11,16 @@ spec:
     - name: branch
       description: the branch for the git repo
       default: master
-    - name: guid
-      description: Id of the App Configuration instance
     - name: region
       description: Region of the App Configuration instance
-    - name: collection_id
-      description: name of the App Configuration collection
-    - name: featureFilePath
-      description: JSON file path where the App Configuration feature details are stored
-    - name: baseUrl
-      description: JSON file path where the App Configuration feature details are stored
-      default: https://apprapp.cloud.ibm.com/apprapp/feature/v1/instances/         
+    - name: apikey
+      description: the ibmcloud api key
+    - name: resourceGroup
+      description: Region of the App Configuration instance
+    - name: imageUrl
+      description: url of the built image
+    - name: clusterName
+      description: The IBM Cloud Kubernetes cluster name
     - name: continuous-delivery-context-secret
       description: name of the configmap containing the continuous delivery pipeline context secrets
       default: cd-secret
@@ -31,12 +30,7 @@ spec:
         valueFrom:
           secretKeyRef:
             name: $(params.continuous-delivery-context-secret)
-            key: GIT_TOKEN
-      - name: API_KEY
-        valueFrom:
-          secretKeyRef:
-            name: $(params.continuous-delivery-context-secret)
-            key: API_KEY                                
+            key: GIT_TOKEN            
   steps:
     - name: git-clone
       image: icr.io/continuous-delivery/pipeline/tekton/alpine-git:latest
@@ -61,84 +55,109 @@ spec:
           fi
           echo $BRANCH
           git clone -b $BRANCH $GIT_URL
-
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume
         - mountPath: /steps
           name: steps-volume
-    - name: appconfig-sync
+    - name: docker-build
       image: ibmcom/pipeline-base-image
       workingDir: /artifacts
       env:
-        - name: GUID
-          value: $(params.guid)
-        - name: COLLECTIONID
-          value: $(params.collection_id)
-        - name: BRANCH
-          value: $(params.branch)
-        - name: REPOSITORY
-          value: $(params.repository)
-        - name: BASEURL
-          value: $(params.baseUrl)                      
         - name: REGION
           value: $(params.region)
-        - name: FEATUREFILEPATH
-          value: $(params.featureFilePath)
+        - name: IMAGEURL
+          value: $(params.imageUrl)        
+        - name: RESOURCEGROUP
+          value: $(params.resourceGroup)
+        - name: REPOSITORY
+          value: $(params.repository)          
         - name: BUILD_NUMBER
           valueFrom:
             fieldRef:
-              fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']                       
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']             
+        - name: API_KEY 
+          valueFrom:
+            secretKeyRef:
+              name: $(params.continuous-delivery-context-secret)
+              key: API_KEY        
+        - name: GIT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: $(params.continuous-delivery-context-secret)
+              key: GIT_TOKEN                                 
       command: ["/bin/bash", "-c"]
       args:
         - |
-          set -x -o pipefail;
+          set -e -x -o pipefail;
+          BUILT_IMAGE="$IMAGEURL:$BUILD_NUMBER"
+          echo "built image $BUILT_IMAGE"
           folderName=$(echo ${REPOSITORY##*/})
-          #customize as per the app folder structure
           cd $folderName/nodejs
-          if [ -z "$REGION" ]
-          then
-            echo "\$REGION is empty"
-            exit 1
-          else
-            subdomain=$REGION.apprapp
-            baseUrl=${BASEURL/apprapp/$subdomain}
-            
-            configUrl="${baseUrl}${GUID}/collections/${COLLECTIONID}/config"
-            echo "api key $API_KEY"
-            until $(curl -H "Authorization: $API_KEY" $configUrl | jq . > featuretemp.json); do
-               printf 'waiting...'
-               sleep 5
-            done
-            cat feature.json
-            cat featuretemp.json
-            
-            diff -wB  "$FEATUREFILEPATH" featuretemp.json  >/dev/null;REPLY=$?
-            #echo "Reply is $REPLY"
-            if [ ${REPLY} -eq 0 ]
-            then
-                echo "No new App Configuration updates.  Application is ready to be deployed"
-            else
-              localBranchName=acsync_$BUILD_NUMBER
-              git branch $localBranchName $BRANCH     
-              git checkout $localBranchName         
-  
-             echo "Files are different"
-             cp featuretemp.json "$FEATUREFILEPATH"
-             rm -rf featuretemp.json
-             userName=$(curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/user | jq -r '.login')
-             email=$(curl -H "Authorization: token $GIT_TOKEN" https://api.github.com/user/emails | jq -r '.[0].email')             
-             git config user.name "$userName"
-             git config user.email "$email"             
-             git add .
-             git commit -m "App Configuration value changes"
-             git push --set-upstream origin $localBranchName
-             title="App Configuration Value Changes"
-             curl -H "Content-Type: application/json" -H "Authorization: token $GIT_TOKEN" https://api.github.com/repos/jojustin/appconfiguration-samples/pulls -d '{"title":"'"${title}"'","head":"'$localBranchName'","base":"'$BRANCH'"}'
-             echo "New App Configuration updates are committed to the repo.  PR needs to be approved to proceed."
-             exit 1
-            fi
-          fi
+          ibmcloud config --check-version false
+          ibmcloud login -a https://cloud.ibm.com -r $REGION --apikey $API_KEY    
+          ibmcloud target -g $RESOURCEGROUP      
+          ibmcloud cr build -t $BUILT_IMAGE .
+          #BUILT_IMAGE="$REGISTRY_URL/$REGISTRY_NAMESPACE/$IMAGE_NAME:$BUILD_NUMBER"
+          echo "image is $BUILT_IMAGE"
+          echo "Docker Image has been pushed to us.icr.io"
+      volumeMounts:
+        - mountPath: /artifacts
+          name: task-volume
+        - mountPath: /steps
+          name: steps-volume
+    - name: deploy
+      image: ibmcom/pipeline-base-image
+      workingDir: /artifacts
+      env:
+        - name: imageUrl
+          value: $(params.imageUrl)
+        - name: REGION
+          value: $(params.region)             
+        - name: clusterName
+          value: $(params.clusterName)
+        - name: resourceGroup
+          value: $(params.resourceGroup)
+        - name: REPOSITORY
+          value: $(params.repository)          
+        - name: BUILD_NUMBER
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.annotations['devops.cloud.ibm.com/build-number']   
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: $(params.continuous-delivery-context-secret)
+              key: API_KEY  
+      command: ["/bin/bash", "-c"]
+      args:
+        - |
+          set -e -x -o pipefail
+          echo "cluster name from param is $clusterName"
+          folderName=$(echo ${REPOSITORY##*/})
+          cd $folderName/nodejs
+          BUILT_IMAGE="$imageUrl:$BUILD_NUMBER"
+          ibmcloud config --check-version false
+          ibmcloud login -a https://cloud.ibm.com -r $REGION --apikey $API_KEY
+          ibmcloud target -g $resourceGroup
+          ibmcloud cr info
+          
+          ibmcloud ks cluster ls
+          ibmcloud ks cluster config --cluster $clusterName
+          
+          #kubectl apply -f kube/secret.yaml
+          #kubectl apply -f kube/statefulsetmongo.yaml
+          #kubectl apply -f kube/servicemongo.yaml
+          #kubectl get secret all-icr-io --namespace=default -o yaml | grep -v '^\s*namespace:\s' | kubectl apply --namespace=appconfig -f -
+          
+          DEPLOYMENT_FILE="kube/deployment.yaml"
+          echo "deployment file $DEPLOYMENT_FILE"
+          sed -i 's=$IMAGE='"$BUILT_IMAGE"'=g' $DEPLOYMENT_FILE
+          
+          cat $DEPLOYMENT_FILE
+          echo "kubectl apply -f $DEPLOYMENT_FILE"
+          kubectl apply -f $DEPLOYMENT_FILE
+          kubectl apply -f kube/servicenode.yaml
       volumeMounts:
         - mountPath: /artifacts
           name: task-volume

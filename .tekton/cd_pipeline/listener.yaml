@@ -8,18 +8,18 @@ spec:
       description: the git repo
     - name: branch
       description: the branch for the git repo
+    - name: apikey
+      description: the ibmcloud api key
     - name: region
       description: Region of the App Configuration instance
-    - name: guid
-      description: Id of the App Configuration instance
-    - name: collection_id
-      description: name of the App Configuration collection
-    - name: apikey
-      description: the ibmcloud api key      
+    - name: resourceGroup
+      description: Region of the App Configuration instance
+    - name: imageUrl
+      description: url of the built image
     - name: gitToken
       description: git Token to access GITHUB api      
-    - name: featureFilePath
-      description: JSON file path where the App Configuration feature details are stored      
+    - name: clusterName
+      description: The IBM Cloud Kubernetes cluster name           
   resourcetemplates:
     - apiVersion: v1
       kind: Secret
@@ -27,12 +27,13 @@ spec:
         name: cd-secret
       type: Opaque
       stringData:
-        API_KEY: $(params.apikey)      
+        API_KEY: $(params.apikey)
+        parameters: $(params.parameters)
         GIT_TOKEN: $(params.gitToken)
         REGION: ${params.region}
-        GUID: ${params.guid}        
-        COLLECTIONID: ${params.collection_id}
-        FEATUREFILE: ${params.featureFilePath}
+        RESOURCEGROUP: ${params.resourceGroup}
+        IMAGEURL: ${params.imageUrl}
+        CLUSTERNAME: ${params.clusterName}
     - apiVersion: v1
       kind: PersistentVolumeClaim
       metadata:
@@ -60,14 +61,16 @@ spec:
             value: $(params.repository)
           - name: branch
             value: $(params.branch)
-          - name: guid
-            value: $(params.guid)
+          - name: apikey
+            value: $(params.apikey)
+          - name: resourceGroup
+            value: $(params.resourceGroup)
+          - name: imageUrl
+            value: $(params.imageUrl)            
           - name: region
             value: $(params.region)
-          - name: collection_id
-            value: $(params.collection_id)
-          - name: featureFilePath
-            value: $(params.featureFilePath)            
+          - name: clusterName
+            value: $(params.clusterName)               
         workspaces:
           - name: pipeline-ws
             persistentVolumeClaim:

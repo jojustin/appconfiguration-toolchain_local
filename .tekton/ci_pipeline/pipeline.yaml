@@ -10,16 +10,14 @@ spec:
       description: the git repo
     - name: branch
       description: the branch for the git repo
-    - name: apikey
-      description: the ibmcloud api key
-    - name: resourceGroup
-      description: Region of the App Configuration instance
-    - name: imageUrl
-      description: url of the built image
-    - name: clusterName
-      description: The IBM Cloud Kubernetes cluster name
     - name: region
       description: Region of the App Configuration instance
+    - name: featureFilePath
+      description: JSON file path where the App Configuration feature details are stored
+    - name: guid
+      description: Id of the App Configuration instance
+    - name: collection_id
+      description: name of the App Configuration collection
   tasks:
     - name: appconfiguration-ci
       taskRef: 
@@ -29,15 +27,13 @@ spec:
           value: $(params.repository)
         - name: branch
           value: $(params.branch)
-        - name: resourceGroup
-          value: $(params.resourceGroup)
-        - name: imageUrl
-          value: $(params.imageUrl)
-        - name: apikey
-          value: $(params.apikey)
+        - name: guid
+          value: $(params.guid)
         - name: region
           value: $(params.region)
-        - name: clusterName
-          value: $(params.clusterName)
+        - name: collection_id
+          value: $(params.collection_id)
+        - name: featureFilePath
+          value: $(params.featureFilePath)
         - name: task-pvc
-          value: $(params.pipeline-pvc)          
+          value: $(params.pipeline-pvc)
