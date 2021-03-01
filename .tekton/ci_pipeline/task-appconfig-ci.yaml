@@ -43,7 +43,7 @@ spec:
       command: ["/bin/sh", "-c"]
       args:
         - |
-          set -e;          
+          set -x;          
           #to do - change this
           replaceStr="$GIT_TOKEN@github"
           #echo "$REPOSITORY"
