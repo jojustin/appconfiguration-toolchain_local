@@ -145,10 +145,10 @@ spec:
           ibmcloud ks cluster ls
           ibmcloud ks cluster config --cluster $clusterName
           
-          kubectl apply -f kube/secret.yaml
-          kubectl apply -f kube/statefulsetmongo.yaml
-          kubectl apply -f kube/servicemongo.yaml
-          kubectl get secret all-icr-io --namespace=default -o yaml | grep -v '^\s*namespace:\s' | kubectl apply --namespace=appconfig -f -
+          #kubectl apply -f kube/secret.yaml
+          #kubectl apply -f kube/statefulsetmongo.yaml
+          #kubectl apply -f kube/servicemongo.yaml
+          #kubectl get secret all-icr-io --namespace=default -o yaml | grep -v '^\s*namespace:\s' | kubectl apply --namespace=appconfig -f -
           
           DEPLOYMENT_FILE="kube/deployment.yaml"
           echo "deployment file $DEPLOYMENT_FILE"
